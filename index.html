@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>usuarios</title>
+	<link rel="stylesheet" type="text/css" href="src/style.css">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+	<link href="css/bootstrap-datetimepicker.min.css" rel="stylesheet">
+
+	<script type="text/javascript" src="src/jquery.min.js"></script>
+
+	<link href='https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css' rel='stylesheet' type='text/css'>
+	<script src='https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js' type='text/javascript'></script>
+
+</head>
+<body>
+	<div class="content">
+	    <div class="login-box">
+	    	<h2 class="title-operation">Ingresa a usuarios ADEA</h2>
+	    	<div class="container-opt box-managment" id="box-managment">
+	    		<div id="divmanagement" ><a  class="btn btn-button" href="#">Administrar</a></div>
+	    		<div id="divconsult" ><a class="btn btn-button" href="#">Buscar usuarios</a></div>
+	    	</div>
+			<div class="managment"><a href="#" class="btn btn-primary" id="btn_registrar">
+		        Nuevo usuario
+		      </a></div>
+
+		      <span class="consult"><a href="#" class="btn btn-primary" id="btn_select_activos">
+		        Activos
+		      </a></span>
+		      <span class="consult"><a href="#" class="btn btn-success" id="btn_select_inactivos">
+		        Inactivos
+		      </a></span>
+		      <span class="consult"><a href="#" class="btn btn-danger" id="btn_select_revocados">
+		        Revocados
+		      </a></span>
+		      <div class="consult">
+			      	<form id="form_buscar">
+		      			<div class="user-box">
+				        	<input type="text" class="form-control login_usuario form-control validate" id="nombrebuscar" aria-describedby="emailHelp" placeholder="Ingresa nombre">
+				        	
+				        	<input placeholder="fecha de inicio" type='text' class="clear datepicker input_search date1" id="date1" data-date-format="yy-mm-dd">
+
+				        	<input placeholder="fecha de fin" type='text' class="clear datepicker input_search date2" id="date2" data-date-format="yy-mm-dd">
+
+				   		 </div>   
+				   	</form>
+			  </div>
+	    <form id="form_login">
+	      <div class="user-box">
+	        <input type="text" class="form-control login_usuario form-control validate" id="login_usuario" aria-describedby="emailHelp" placeholder="Ingresa usuario">
+	        <label>Usuario</label>
+	      </div>
+	      <div class="user-box">
+	        <input type="password" class="form-control login_pass form-control validate" id="login_pass" placeholder="Password">
+	        <label>Password</label>
+	      </div>
+	      <div class="user-box box-registro">
+	        <input type="text" class="form-control login_nombre form-control validate" id="login_nombre" placeholder="Nombre">
+	        <label>Nombre</label>
+	      </div>
+	      <div class="user-box box-registro">
+	        <input type="text" class="form-control login_apaterno form-control validate" id="login_apaterno" placeholder="Apellido paterno">
+	        <label>Apellido paterno</label>
+	      </div>
+	      <div class="user-box box-registro">
+	        <input type="text" class="form-control login_amaterno form-control validate" id="login_amaterno" placeholder="Apellido materno">
+	        <label>Apellido materno</label>
+	      </div>
+	      <div class="user-box box-registro">
+	        <input type="text" class="form-control login_cliente form-control validate" id="login_cliente" placeholder="Cliente">
+	        <label>Cliente</label>
+	      </div>
+	       <div class="user-box box-registro">
+	        <input placeholder="fecha de alta" type='text' class="clear datepicker input_search dateregs" id="dateregs" data-date-format="yy-mm-dd">
+	      </div> 
+	      <div class="user-box box-registro">
+	      	<select class="form-select" id="select-estado" aria-label="Default select example">
+					  <option selected>Selecciona el estado</option>
+					  <option value="A">Activo</option>
+					  <option value="B">Inactivo</option>
+					  <option value="R">Revocado</option>
+					</select>
+				</div>
+	      <span class="box-loggin"><a href="#" class="btn btn-primary" id="btn_entrar_loggin">
+	        Acceder
+	      </a></span>
+	      <span class="box-registro send_registro"><a href="#" class="btn btn-primary" id="btn_nuevo_loggin">
+	        Registrar
+	      </a></span>
+	      <span class="box-actualizar"><a href="#" class="btn btn-primary" id="btn_actualizar_loggin">
+	        Actualizar
+	      </a></span>
+	      <a href="#" id="btn-cancelar">
+	        Cancel
+	      </a>
+	    </form>
+	    <h4 id="errorMessaje"></h4>
+	  </div>
+  </div>
+
+  <div class="content-table" id="content-table">
+	    <div class="inner-table">
+	    <table class="table align-middle mb-0 bg-white" id="tableUsers">
+		  <thead class="bg-light">
+		    <tr>
+		      <th>Nombre</th>
+		      <th>Login</th>
+		      <th>fecha alta</th>
+		      <th>estatus</th>
+		      <th>action</th>
+		    </tr>
+		  </thead>
+		  <tbody>
+		    
+		  </tbody>
+		</table>
+	</div>
+  </div>
+</body>
+<script type="text/javascript">
+	$(document).ready(function(doc){
+		$('.datepicker').datepicker(); 
+    $("#btn_select_activos").click(function(event)
+    { 
+    	console.log("activos");
+    	getAllUsers("","A","","");
+	});
+	$("#btn_select_inactivos").click(function(event)
+    { 
+    	console.log("inactivos");
+    	getAllUsers("","B","","");
+	});
+	$("#btn_select_revocados").click(function(event)
+    { 
+    	console.log("revocados");
+    	getAllUsers("","R","","");
+	});
+	$(document).keypress(function(evt)
+	{
+		if(evt.which==13)
+		{
+			var fech1=$("#date1").val();
+			var fech2=$("#date2").val();
+			var nombrebuscar=$("#nombrebuscar").val();
+			if(nombrebuscar!="" && fech2=="" || fech2==""){
+				console.log("buscar normal"+ nombrebuscar);
+
+				getAllUsers(nombrebuscar,"","","");
+			}else if(fech2!="" || fech2!=""){
+				getAllUsers("","",fech1,fech2)
+			}
+			console.log("fecha1 buscando"+ fech1);
+		}
+	});
+	$("#btn_entrar_loggin").click(function(event)
+	{
+			var usuario=$("#login_usuario").val();
+			var pass=$("#login_pass").val();
+			console.log("contra"+pass);
+			$.get("http://127.0.0.1:9999/service/getOneUserADEA/"+usuario+"/"+pass,function(res)
+				{
+				console.log(res);
+                res=JSON.parse(res);
+                var html="";
+                if(res!="")
+                {
+                  $.each(res, function(i, item)
+                  {		
+                  	console.log(item.LOGIN);
+                  	if(item.LOGIN==usuario){
+                  		$("#form_login").hide();
+                  		$("#content-table").show();
+                  		$("#box-managment").show();
+                  		$(".title-operation").text("Usuarios ADEA");
+                  		getAllUsers("","","");
+                  	}
+                  });
+              	}
+	        });
+
+	});
+	function getAllUsers(words,activo,date1,date2){
+		var url=words!="" ? "http://localhost:9999/service/getUsersADEAByName/"+words : "http://localhost:9999/service/getUsersADEA";
+		var url=activo!="" ? "http://localhost:9999/service/getUsersADEAByActive/"+activo : url;
+		var url=(date1!="" && date2!="") ? "http://localhost:9999/service/getUsersADEAByDate/"+date1+"/"+date2 : url;
+		$.get(url,function(res)
+          {
+	          	var html='';
+	          	res=JSON.parse(res);
+	          	console.log(res);
+              $.each(res, function(i, item)
+              {
+               
+                var btn_elimina='<a type="button" style="color: white;" class="btn badge-danger rounded-pill btn-link btn-sm btn-rounded deleteuser" data-login="'+item.LOGIN+'" data-nombre="'+item.NOMBRE+'">eliminar</a>';
+                
+                var btn_actualiza='<a type="button" style="color: white;" class="btn badge-success rounded-pill btn-link btn-sm btn-rounded edituser" data-login="'+item.LOGIN+'" data-nombre="'+item.NOMBRE+'" data-cliente="'+item.CLIENTE+'" data-apaterno="'+item.APELLIDO_PATERNO+'" data-amaterno="'+item.APELLIDO_MATERNO+'" data-estado="'+item.STATUS+'" data-dateregs="'+item.FECHAALTA+'">actualizar</a>';
+
+               
+                html+='<tr>'+
+					  '<td>'+
+					    '<div class="d-flex align-items-center">'+
+					      '<img src="https://mdbootstrap.com/img/new/avatars/8.jpg" alt="" style="width: 45px; height: 45px" class="rounded-circle">'+
+					      '<div class="ms-3">'+
+					        '<p class="fw-bold mb-1">'+item.NOMBRE+'</p>'+
+					        '<p class="text-muted mb-0">john.doe@.com</p>'+
+					      '</div>'+
+					    '</div>'+
+					  '</td>'+
+					  '<td>'+
+					    '<p class="fw-normal mb-1">'+item.LOGIN+'</p>'+
+					    '<p class="text-muted mb-0">IT department</p>'+
+					  '</td>'+
+					  '<td>'+
+					    '<span class="badge badge-success rounded-pill d-inline">'+item.FECHAALTA+'</span>'+
+					  '</td>'+
+					  '<td>'+item.STATUS+'</td>'+
+					  '<td>'+
+					  btn_actualiza+
+					    btn_elimina+
+					  '</td>'+
+					'</tr>'
+              });
+              $("#tableUsers tbody").html(html);
+        });
+	}
+	$("#btn_registrar").click(function(evt){
+		$("#form_login").show();
+		$(".box-registro").show();
+        $("#content-table").hide();
+        $("div.managment").hide();
+        $(".box-loggin").hide();
+        $("#box-managment").hide();
+        $(".title-operation").text("Registrar un nuevo usuario");
+        $(".consult").hide();
+	})
+	$("#divmanagement").click(function(evt){
+		console.log("abrir administracion");
+		$("div.managment").show();
+		$(".consult").hide();
+	})
+	$("#btn-cancelar").click(function(evt){
+		console.log("cerrar registro");
+		$("#form_login").hide();
+		$(".box-registro").hide();
+        $("#content-table").show();
+        $("div.managment").show();
+        $("#box-managment").show();
+        $(".managment").hide();
+        $(".title-operation").text("Usuarios ADEA");
+	})
+	$("#divconsult").click(function(event)
+	{
+		console.log("buscar");
+			$("#form_login").hide();
+      		$("#content-table").show();
+      		$(".managment").hide();
+      		$(".consult").show();
+      		///$(".title-operation").text("Usuarios ADEA");
+      		//$("div.managment").hide();
+
+	});
+	$("#btn_nuevo_loggin").click(function(evt){
+		console.log("nuevo registro");
+		var usuario=$("#login_usuario").val();
+			var pass=$("#login_pass").val();
+			var nombre=$("#login_nombre").val();
+			var cliente=$("#login_cliente").val();
+			var apaterno=$("#login_apaterno").val();
+			var amaterno=$("#login_amaterno").val();
+			/////var estado=$("#login_estado").val();
+			var dateregs=$("#dateregs").val();
+			var stateselect=$("#select-estado").val();
+		console.log("nuevo:::::"+usuario+" ::: "+stateselect);
+		$.get("http://localhost:9999/service/setOneUserADEA/"+usuario+"/"+pass+"/"+nombre+"/"+apaterno+"/"+amaterno+"/"+cliente+"/"+stateselect+"/"+dateregs,function(res)
+			{
+				console.log(""+res);
+				res=JSON.parse(res);
+                var html="";
+                if(res!="")
+                {
+                  $.each(res, function(i, item)
+                  {		
+                  	console.log("error"+item.error);
+                  	if(item.error!="xxxxx"){
+                  		$("#errorMessaje").text(""+item.error);
+                  	}else{
+                  		$("#form_login").hide();
+						$(".box-registro").hide();
+				        $("#content-table").show();
+				        $("div.managment").show();
+				        $("#box-managment").show();
+				        $(".managment").hide();
+                  	}
+                  });
+              	}
+              	getAllUsers("","","","");
+			});
+		
+	})
+	$("#tableUsers").on('click','a.deleteuser',function(event)
+    	{
+    		
+			var login=$(this).data("login");
+			var nombre=$(this).data("nombre");
+			console.log("eliminando:::::"+login);
+    		$.get("http://localhost:9999/service/deleteUserADEA/"+login+"/"+nombre,function(res)
+				{
+	              	getAllUsers("","","","");
+
+				});
+
+    	});
+	$("#tableUsers").on('click','a.edituser',function(event)
+    	{
+    		
+			var login=$(this).data("login");
+			var nombre=$(this).data("nombre");
+			var apaterno=$(this).data("apaterno");
+			var amaterno=$(this).data("amaterno");
+			var cliente=$(this).data("cliente");
+			var estado=$(this).data("estado");
+			var dateregs=$(this).data("dateregs");
+
+			$("#login_usuario").val(login);
+			$("#login_nombre").val(nombre);
+			$("#login_cliente").val(cliente);
+			$("#login_apaterno").val(apaterno);
+			$("#login_amaterno").val(amaterno);
+			////$("#login_estado").val(estado);
+
+			$("#select-estado").val(estado);
+			$("#dateregs").val(dateregs);
+
+			$("#form_login").show();
+  		$(".box-loggin").hide();
+  		$("#box-managment").hide();
+  		$(".consult").hide();
+  		$(".box-registro").show();
+  		$(".send_registro").hide();
+			$("#content-table").hide();
+			$(".box-actualizar").show();
+			console.log("editado::::: "+login+" ::: "+dateregs);
+    		
+
+    	});
+	$("#btn_actualizar_loggin").click(function(event)
+	{
+		
+		var login=$("#login_usuario").val();
+		var nombre=$("#login_nombre").val();
+		var cliente=$("#login_cliente").val();
+		var apaterno=$("#login_apaterno").val();
+		var amaterno=$("#login_amaterno").val();
+		var estado=$("#login_estado").val();
+		var stateselect=$("#select-estado").val();
+		var dateregs=$("#dateregs").val();
+		console.log("mandar actualizacion"+ stateselect);
+		$.get("http://localhost:9999/service/alterUserADEA/"+login+"/"+nombre+"/"+cliente+"/"+apaterno+"/"+amaterno+"/"+stateselect+"/"+dateregs,function(res)
+			{
+              	getAllUsers("","","","");
+              	$("#form_login").hide();
+					  		$(".box-loggin").hide();
+					  		$("#box-managment").show();
+								$("#content-table").show();
+			});
+
+	});
+});
+</script>
+</html>
