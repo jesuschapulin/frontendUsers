@@ -1,0 +1,110 @@
+<!-- Section: Design Block -->
+<section class="background-radial-gradient overflow-hidden">
+  
+    <div class="container px-4 py-5 px-md-5 text-center text-lg-start my-5">
+      <div class="row gx-lg-5 align-items-center mb-5">
+        <div class="col-lg-6 mb-5 mb-lg-0" style="z-index: 10">
+          <h1 class="my-5 display-5 fw-bold ls-tight" style="color: hsl(218, 81%, 95%)">
+            El mejor control <br />
+            <span style="color: hsl(218, 81%, 75%)">para Acceso de usuarios</span>
+          </h1>
+          <p class="mb-4 opacity-70" style="color: hsl(218, 81%, 85%)">
+            Nuestro enfoque de control de usuarios encriptados se basa en la última tecnología de cifrado, asegurando una capa adicional de protección contra accesos no autorizados. 
+          </p>
+        </div>
+  
+        <div class="col-lg-6 mb-5 mb-lg-0 position-relative">
+          <div id="radius-shape-1" class="position-absolute rounded-circle shadow-5-strong"></div>
+          <div id="radius-shape-2" class="position-absolute shadow-5-strong"></div>
+  
+          <div class="card bg-glass">
+            <div class="card-body px-4 py-5 px-md-5">
+              <form>
+                <div class="row">
+                    <div class="form-outline mb-4">
+                        <input type="text" id="formRegUsuario" class="form-control" [(ngModel)]="dataRegister.LOGIN" name="LOGIN"/>
+                        <label class="form-label" for="formRegUsuario">Usuario</label>
+                    </div>
+                  <div class="form-outline mb-4">
+                    <input type="text" id="formRegNombre" class="form-control" [(ngModel)]="dataRegister.NOMBRE" name="NOMBRE"/>
+                    <label class="form-label" for="formRegNombre">Nombre</label>
+                  </div>
+                  <div class="col-md-6 mb-4">
+                    <div class="form-outline">
+                      <input type="text" id="form3Example1" class="form-control" [(ngModel)]="dataRegister.APELLIDO_PATERNO" name="APELLIDO_PATERNO"/>
+                      <label class="form-label" for="form3Example1">Apellido paterno</label>
+                    </div>
+                  </div>
+                  <div class="col-md-6 mb-4">
+                    <div class="form-outline">
+                      <input type="text" id="form3Example2" class="form-control" [(ngModel)]="dataRegister.APELLIDO_MATERNO" name="APELLIDO_MATERNO"/>
+                      <label class="form-label" for="form3Example2">Apellido materno</label>
+                    </div>
+                  </div>
+                  <div class="col-md-6 mb-4">
+                    <div class="form-outline">
+                      <input type="text" id="form3Example3" class="form-control" [(ngModel)]="dataRegister.CLIENTE" name="CLIENTE"/>
+                      <label class="form-label" for="form3Example3">Cliente</label>
+                    </div>
+                  </div>
+                  <div class="col-md-6 mb-4">
+                    <div class="form-outline">
+                      <input type="text" id="formRegFecAlta" class="datepicker form-control" data-date-format="yy-mm-dd" [(ngModel)]="dataRegister.FECHAALTA" name="FECHAALTA"/>
+                      <label class="form-label" for="formRegFecAlta">Fecha de alta</label>
+                    </div>
+                  </div>
+                  <div class="col-md-6 mb-4">
+                    <div class="form-outline">
+                      <!-- <input type="text" id="formRegStatus" class="form-control" />
+                      <label class="form-label" for="formRegStatus">Estado activo</label> -->
+                      <div class="select">
+                        <select
+                          name="select-estado"
+                          [(ngModel)]="dataRegister.STATUS">
+                          <option value="" disabled selected hidden>Estado</option>
+                          <!-- <option [value]="item" *ngFor="let item of listaEstatus">
+                            {{ item }}
+                          </option> -->
+                          <option value="A">
+                            Activo
+                          </option>
+                          <option value="B">
+                            Inactivo
+                          </option>
+                          <option value="R">
+                            Revocado
+                          </option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+  
+                <!-- Email input -->
+                <div class="form-outline mb-4">
+                  <input type="email" id="form3Example4" class="form-control" [(ngModel)]="dataRegister.EMAIL" name="EMAIL"/>
+                  <label class="form-label" for="form3Example4">Email</label>
+                </div>
+  
+                <!-- Password input -->
+                <div class="form-outline mb-4">
+                  <input type="password" id="form3Example5" class="form-control" [(ngModel)]="dataRegister.PASSWORD" name="PASSWORD"/>
+                  <label class="form-label" for="form3Example5">Contraseña</label>
+                </div>
+  
+                <!-- Submit button -->
+                <span class="btn btn-primary btn-block mb-4" (click)="prepareRegister()">
+                  Continuar
+                </span>
+                <!-- Submit button -->
+                <span  class="btn btn-default btn-block mb-4" (click)="goManage()">
+                    Cancelar
+                </span>
+                <!-- {{dataRegister | json}} -->
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>

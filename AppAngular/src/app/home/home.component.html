@@ -1,0 +1,124 @@
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-body-tertiary">
+    <!-- Container wrapper -->
+    <div class="container">
+      <!-- Navbar brand -->
+      <a class="navbar-brand me-2" href="https://mdbgo.com/">
+        <img
+          src="https://mdbcdn.b-cdn.net/img/logo/mdb-transaprent-noshadows.webp"
+          height="16"
+          alt="MDB Logo"
+          loading="lazy"
+          style="margin-top: -1px;"
+        />
+      </a>
+  
+      <!-- Toggle button -->
+      <button
+        data-mdb-collapse-init
+        class="navbar-toggler"
+        type="button"
+        data-mdb-target="#navbarButtonsExample"
+        aria-controls="navbarButtonsExample"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <i class="fas fa-bars"></i>
+      </button>
+  
+      <!-- Collapsible wrapper -->
+      <div class="collapse navbar-collapse" id="navbarButtonsExample">
+        <!-- Left links -->
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <button type="button" class="btn btn-light viweActive"><span (click)="goHome()">Consulta</span> </button>
+
+            <button type="button" class="btn btn-light"><span (click)="goManage()">Administracion</span> </button>
+          </li>
+        </ul>
+        <!-- Left links -->
+  
+        <div class="d-flex align-items-center">
+          
+        </div>
+      </div>
+      <!-- Collapsible wrapper -->
+    </div>
+    <!-- Container wrapper -->
+  </nav>
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col col-sm-4">
+        <form>
+          <div class="form-group">
+            <span class="btn btn-success btn-block mb-4" (click)="searchUserByStatus('A')">
+              Activos
+              </span>
+            <span class="btn btn-secondary btn-block mb-4" (click)="searchUserByStatus('B')">
+              Inactivos
+            </span>
+            <span class="btn btn-danger btn-block mb-4" (click)="searchUserByStatus('R')">
+              Revocados
+            </span>
+            <input type="email" class="form-control" id="searchName" aria-describedby="emailHelp" placeholder="Ingresa nombre" [(ngModel)]="dataSearchAccess.NOMBRE" name="NOMBRE">
+            <label for="searchName">Nombre</label>
+            <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
+          </div>
+          <div class="form-group">
+            <input type="text" id="formSearchFec1" class="datepicker form-control" data-date-format="yy-mm-dd" [(ngModel)]="dataSearchAccess.FECHA1" name="FECHA1"/>
+                            <label class="form-label" for="formSearchFec1">Fecha de inicio</label>
+          </div>
+          <div class="form-group">
+            <input type="text" id="formSearchFec2" class="datepicker form-control" data-date-format="yy-mm-dd" [(ngModel)]="dataSearchAccess.FECHA2" name="FECHA2"/>
+                            <label class="form-label" for="formSearchFec2">Fecha de fin</label>
+          </div>
+          <span class="btn btn-primary btn-block mb-4" (click)="searchUser()">
+            Buscar
+            </span>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Navbar -->
+<table class="table align-middle mb-0 bg-white">
+    <thead class="bg-light">
+      <tr>
+        <th>Nombre</th>
+        <th>Login</th>
+        <th>Fecha alta</th>
+        <th>Estatus</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="
+                let usuario of data;
+                index as i
+                "
+            attr.id="usercard{{ usuario.id }}">
+        <td>
+          <div class="d-flex align-items-center">
+            <img
+                src="https://mdbootstrap.com/img/new/avatars/8.jpg"
+                alt=""
+                style="width: 45px; height: 45px"
+                class="rounded-circle"
+                />
+            <div class="ms-3">
+              <p class="fw-bold mb-1">{{ usuario.NOMBRE }}</p>
+              <p class="text-muted mb-0">{{ usuario.EMAIL }}</p>
+            </div>
+          </div>
+        </td>
+        <td>
+          <p class="fw-normal mb-1">{{ usuario.LOGIN }}</p>
+          <p class="text-muted mb-0">IT department</p>
+        </td>
+        <td>
+          <span class="badge badge-success rounded-pill d-inline">{{usuario.FECHAALTA}}</span>
+        </td>
+        <td>{{ usuario.STATUS }}</td>
+        
+      </tr>
+    </tbody>
+  </table>
