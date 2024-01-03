@@ -24,13 +24,15 @@ export class UpdateComponent implements OnInit {
     "FECHAALTA":"",
     "EMAIL":""
   };
-/*   charNoAc: string = "[^#/\"?%]+"; */
+  usuario;
   login= "";
   constructor(
     private service: LocalServiceService,
     private route: ActivatedRoute,
     private router: Router
     ) {
+      this.usuario = localStorage.getItem("usuario");
+      console.log("usuario obtenido:::::::::: "+this.usuario);
       
     }
     data: any;
@@ -40,6 +42,7 @@ export class UpdateComponent implements OnInit {
       $(document).ready(function () {
         console.log("cargando javascript edition:::::::");
         $('.datepicker').datepicker(); 
+        $(".viweActive").attr("Style","background-color: lightgrey");
       });
       
       this.route.paramMap.subscribe(params => {
@@ -48,6 +51,10 @@ export class UpdateComponent implements OnInit {
         console.log(login);
         this.getDataUser();
       });
+      if(this.usuario=="" || this.usuario==undefined){
+        console.log("No se identifico el usuario:::::::"+this.usuario );
+        this.goLogin();
+      }
     }
     getDataUser() {
       var ngInstance=this;
@@ -142,10 +149,18 @@ export class UpdateComponent implements OnInit {
     goRegister() {
       this.router.navigateByUrl('/register');
     }
+    goManage() {
+      this.router.navigateByUrl('/manage');
+    }
     goHome() {
       this.router.navigateByUrl('/home');
     }
     cancelEdit(){
       this.goHome();
+    }
+    goCloseSession() {
+      console.log("cerrando sesión:::::::");
+      localStorage.removeItem('usuario');
+      location.reload();
     }
 }

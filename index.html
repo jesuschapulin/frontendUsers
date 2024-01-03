@@ -69,20 +69,24 @@
 	        <label>Apellido materno</label>
 	      </div>
 	      <div class="user-box box-registro">
-	        <input type="text" class="form-control login_cliente form-control validate" id="login_cliente" placeholder="Cliente">
-	        <label>Cliente</label>
-	      </div>
+	        <!-- <input type="text" class="form-control login_cliente form-control validate" id="login_cliente" placeholder="Cliente"> -->
+	        
+			<select class="form-select" id="login_cliente" aria-label="Default select example">
+			</select>
+			<label>Cliente</label>
+	      </div><br/><br/>
 	       <div class="user-box box-registro">
-	        <input placeholder="fecha de alta" type='text' class="clear datepicker input_search dateregs" id="dateregs" data-date-format="yy-mm-dd">
-	      </div> 
+				<input placeholder="Seleccione la fecha de alta" type='text' class="clear datepicker input_search dateregs" id="dateregs" data-date-format="yyyy-mm-dd">
+				<label>Fecha de alta</label>
+			</div> 
 	      <div class="user-box box-registro">
-	      	<select class="form-select" id="select-estado" aria-label="Default select example">
-					  <option selected>Selecciona el estado</option>
-					  <option value="A">Activo</option>
-					  <option value="B">Inactivo</option>
-					  <option value="R">Revocado</option>
-					</select>
-				</div>
+				<select class="form-select" id="select-estado" aria-label="Default select example">
+					<option selected>Selecciona el estado activo del cliente</option>
+					<option value="A">Activo</option>
+					<option value="B">Inactivo</option>
+					<option value="R">Revocado</option>
+				</select>
+		  </div>
 	      <span class="box-loggin"><a href="#" class="btn btn-primary" id="btn_entrar_loggin">
 	        Acceder
 	      </a></span>
@@ -94,6 +98,9 @@
 	      </a></span>
 	      <a href="#" id="btn-cancelar">
 	        Cancel
+	      </a>
+		  <a href="#" id="btn-firstReg" style="position: relative; left: 95px;">
+	        Registrarme
 	      </a>
 	    </form>
 	    <h4 id="errorMessaje"></h4>
@@ -108,8 +115,8 @@
 		      <th>Nombre</th>
 		      <th>Login</th>
 		      <th>fecha alta</th>
-		      <th>estatus</th>
-		      <th>action</th>
+		      <th>Estatus</th>
+		      <th>Action</th>
 		    </tr>
 		  </thead>
 		  <tbody>
@@ -122,6 +129,23 @@
 <script type="text/javascript">
 	$(document).ready(function(doc){
 		$('.datepicker').datepicker(); 
+		var newOptions = {
+			};
+		for(var i=1; i<=500; i++){
+			newOptions["Cliente "+i]=""+i;
+		}
+		console.log(newOptions);
+		var $el = $("#login_cliente");
+		$el.empty(); // remove old options
+		var cont=0;
+		$.each(newOptions, function(key,value) {
+			cont++;
+			if(cont==1){
+				$el.append($("<option selected>Seleccione el numero de cliente</option>"));
+			}
+			$el.append($("<option></option>")
+			.attr("value", value).text(key));
+		});
     $("#btn_select_activos").click(function(event)
     { 
     	console.log("activos");
@@ -174,6 +198,7 @@
                   		$("#content-table").show();
                   		$("#box-managment").show();
                   		$(".title-operation").text("Usuarios ADEA");
+						$("#btn-firstReg").hide();
                   		getAllUsers("","","");
                   	}
                   });
@@ -250,6 +275,17 @@
         $(".managment").hide();
         $(".title-operation").text("Usuarios ADEA");
 	})
+	$("#btn-firstReg").click(function(evt){
+		$("#form_login").show();
+		$(".box-registro").show();
+        $("#content-table").hide();
+        $("div.managment").hide();
+        $(".box-loggin").hide();
+        $("#box-managment").hide();
+        $(".title-operation").text("Registrar un nuevo usuario");
+        $(".consult").hide();
+		$("#btn-firstReg").hide();
+	})
 	$("#divconsult").click(function(event)
 	{
 		console.log("buscar");
@@ -272,8 +308,15 @@
 			/////var estado=$("#login_estado").val();
 			var dateregs=$("#dateregs").val();
 			var stateselect=$("#select-estado").val();
+
+			var d = new Date(dateregs);
+			var year = d.getFullYear();
+          var month = d.getMonth() + 1;
+          var day = d.getUTCDate();
+          // Generate yyyy-mm-dd date string
+          var formattedDate = day + "-" + month + "-" + year;
 		console.log("nuevo:::::"+usuario+" ::: "+stateselect);
-		$.get("http://localhost:9999/service/setOneUserADEA/"+usuario+"/"+pass+"/"+nombre+"/"+apaterno+"/"+amaterno+"/"+cliente+"/"+stateselect+"/"+dateregs,function(res)
+		$.post("http://localhost:9999/service/setOneUserADEA/"+usuario+"/"+pass+"/"+nombre+"/"+apaterno+"/"+amaterno+"/"+cliente+"/"+stateselect+"/"+formattedDate,function(res)
 			{
 				console.log(""+res);
 				res=JSON.parse(res);
@@ -292,6 +335,7 @@
 				        $("div.managment").show();
 				        $("#box-managment").show();
 				        $(".managment").hide();
+						$("#errorMessaje").text("");
                   	}
                   });
               	}
@@ -305,7 +349,7 @@
 			var login=$(this).data("login");
 			var nombre=$(this).data("nombre");
 			console.log("eliminando:::::"+login);
-    		$.get("http://localhost:9999/service/deleteUserADEA/"+login+"/"+nombre,function(res)
+    		$.post("http://localhost:9999/service/deleteUserADEA/"+login+"/"+nombre,function(res)
 				{
 	              	getAllUsers("","","","");
 
@@ -356,8 +400,15 @@
 		var estado=$("#login_estado").val();
 		var stateselect=$("#select-estado").val();
 		var dateregs=$("#dateregs").val();
-		console.log("mandar actualizacion"+ stateselect);
-		$.get("http://localhost:9999/service/alterUserADEA/"+login+"/"+nombre+"/"+cliente+"/"+apaterno+"/"+amaterno+"/"+stateselect+"/"+dateregs,function(res)
+		// Get year, month, and day part from the date
+		var d = new Date(dateregs);
+		var year = d.getFullYear();
+          var month = d.getMonth() + 1;
+          var day = d.getUTCDate();
+          // Generate yyyy-mm-dd date string
+          var formattedDate = day + "-" + month + "-" + year;
+		console.log("mandar actualización "+ formattedDate);
+		$.post("http://localhost:9999/service/alterUserADEA/"+login+"/"+nombre+"/"+cliente+"/"+apaterno+"/"+amaterno+"/"+stateselect+"/"+formattedDate,function(res)
 			{
               	getAllUsers("","","","");
               	$("#form_login").hide();

@@ -33,13 +33,32 @@
           <li class="nav-item">
             <button type="button" class="btn btn-light viweActive"><span (click)="goHome()">Consulta</span> </button>
 
-            <button type="button" class="btn btn-light"><span (click)="goManage()">Administracion</span> </button>
+            <button type="button" class="btn btn-light"><span (click)="goManage()">Administración</span> </button>
+            <button type="button" class="btn btn-light"><span (click)="goPapers()">Papers</span> </button>
           </li>
         </ul>
         <!-- Left links -->
   
         <div class="d-flex align-items-center">
-          
+          <!-- Avatar -->
+            <div class="dropdown">
+                <img
+                  src="https://mdbcdn.b-cdn.net/img/new/avatars/2.webp"
+                  class="rounded-circle"
+                  height="25"
+                  alt="Black and White Portrait of a Man"
+                  loading="lazy"
+                />
+            </div>
+            <div class="btn-group">
+              <button type="button" class="btn btn-default dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                <span class="visually-hidden">Toggle Dropdown</span>
+              </button>
+              <ul class="dropdown-menu">
+                <li><span class="dropdown-item" (click)="goCloseSession()">Cerrar sesión</span></li>
+              </ul>
+            </div>
+            <a class="nav-link" href="#">&nbsp;&nbsp;{{usuario}}</a>
         </div>
       </div>
       <!-- Collapsible wrapper -->
@@ -47,35 +66,61 @@
     <!-- Container wrapper -->
   </nav>
   <div class="container">
-    <div class="row justify-content-center">
-      <div class="col col-sm-4">
-        <form>
-          <div class="form-group">
-            <span class="btn btn-success btn-block mb-4" (click)="searchUserByStatus('A')">
-              Activos
-              </span>
-            <span class="btn btn-secondary btn-block mb-4" (click)="searchUserByStatus('B')">
-              Inactivos
-            </span>
-            <span class="btn btn-danger btn-block mb-4" (click)="searchUserByStatus('R')">
-              Revocados
-            </span>
-            <input type="email" class="form-control" id="searchName" aria-describedby="emailHelp" placeholder="Ingresa nombre" [(ngModel)]="dataSearchAccess.NOMBRE" name="NOMBRE">
-            <label for="searchName">Nombre</label>
-            <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
+    <div class="row">
+      <div class="col align-self-center" style="text-align: center;">
+        <span class="d-inline-flex gap-1">
+          <a style="background-color: black;
+                    color: white;
+                    border-radius: 20px;
+                    height: 40px;
+                    width: 40px;" 
+              class="btn btn-btn-dark" 
+              data-bs-toggle="collapse" 
+              href="#collapseExample" 
+              role="button" 
+              aria-expanded="false" 
+              aria-controls="collapseExample"
+              id="btnOpenSearch" 
+              (click)="openSearch()"
+          >
+            +
+          </a>
+        </span>
+      </div>
+    </div>
+    <div class="collapse" id="collapseExample">
+      <div class="card card-body">
+        <div class="row justify-content-center">
+          <div class="col col-sm-6">
+            <form>
+              <div class="form-group">
+                <span class="btn btn-success btn-block mb-4" (click)="searchUserByStatus('A')">
+                  Activos
+                  </span>&nbsp;&nbsp;
+                <span class="btn btn-secondary btn-block mb-4" (click)="searchUserByStatus('B')">
+                  Inactivos
+                </span>&nbsp;&nbsp;
+                <span class="btn btn-danger btn-block mb-4" (click)="searchUserByStatus('R')">
+                  Revocados
+                </span>
+                <input type="email" class="form-control" id="searchName" aria-describedby="emailHelp" placeholder="Ingresa nombre" [(ngModel)]="dataSearchAccess.NOMBRE" name="NOMBRE">
+                <label for="searchName">Nombre</label>
+                <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
+              </div>
+              <div class="form-group">
+                <input type="text" id="formSearchFec1" class="datepicker form-control" data-date-format="yy-mm-dd" [(ngModel)]="dataSearchAccess.FECHA1" name="FECHA1"/>
+                                <label class="form-label" for="formSearchFec1">Fecha de inicio</label>
+              </div>
+              <div class="form-group">
+                <input type="text" id="formSearchFec2" class="datepicker form-control" data-date-format="yy-mm-dd" [(ngModel)]="dataSearchAccess.FECHA2" name="FECHA2"/>
+                                <label class="form-label" for="formSearchFec2">Fecha de fin</label>
+              </div>
+              <span class="btn btn-primary btn-block mb-4" (click)="searchUser()">
+                Buscar
+                </span>
+            </form>
           </div>
-          <div class="form-group">
-            <input type="text" id="formSearchFec1" class="datepicker form-control" data-date-format="yy-mm-dd" [(ngModel)]="dataSearchAccess.FECHA1" name="FECHA1"/>
-                            <label class="form-label" for="formSearchFec1">Fecha de inicio</label>
-          </div>
-          <div class="form-group">
-            <input type="text" id="formSearchFec2" class="datepicker form-control" data-date-format="yy-mm-dd" [(ngModel)]="dataSearchAccess.FECHA2" name="FECHA2"/>
-                            <label class="form-label" for="formSearchFec2">Fecha de fin</label>
-          </div>
-          <span class="btn btn-primary btn-block mb-4" (click)="searchUser()">
-            Buscar
-            </span>
-        </form>
+        </div>
       </div>
     </div>
   </div>
@@ -115,7 +160,7 @@
           <p class="text-muted mb-0">IT department</p>
         </td>
         <td>
-          <span class="badge badge-success rounded-pill d-inline">{{usuario.FECHAALTA}}</span>
+          <span>{{usuario.FECHAALTA}}</span>
         </td>
         <td>{{ usuario.STATUS }}</td>
         

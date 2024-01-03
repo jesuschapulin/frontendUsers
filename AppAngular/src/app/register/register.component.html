@@ -1,3 +1,69 @@
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-body-tertiary">
+  <!-- Container wrapper -->
+  <div class="container">
+    <!-- Navbar brand -->
+    <a class="navbar-brand me-2" href="https://mdbgo.com/">
+      <img
+        src="https://mdbcdn.b-cdn.net/img/logo/mdb-transaprent-noshadows.webp"
+        height="16"
+        alt="MDB Logo"
+        loading="lazy"
+        style="margin-top: -1px;"
+      />
+    </a>
+
+    <!-- Toggle button -->
+    <button
+      data-mdb-collapse-init
+      class="navbar-toggler"
+      type="button"
+      data-mdb-target="#navbarButtonsExample"
+      aria-controls="navbarButtonsExample"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Collapsible wrapper -->
+    <div class="collapse navbar-collapse" id="navbarButtonsExample">
+      <!-- Left links -->
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <button type="button" class="btn btn-light"><span (click)="goHome()">Consulta</span> </button>
+
+          <button type="button" class="btn btn-light viweActive"><span (click)="goManage()">Administración</span> </button>
+        </li>
+      </ul>
+      <!-- Left links -->
+
+      <div class="d-flex align-items-center">
+        <!-- Avatar -->
+          <div class="dropdown">
+              <img
+                src="https://mdbcdn.b-cdn.net/img/new/avatars/2.webp"
+                class="rounded-circle"
+                height="25"
+                alt="Black and White Portrait of a Man"
+                loading="lazy"
+              />
+          </div>
+          <div class="btn-group">
+            <button type="button" class="btn btn-default dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+              <span class="visually-hidden">Toggle Dropdown</span>
+            </button>
+            <ul class="dropdown-menu">
+              <li><span class="dropdown-item" (click)="goCloseSession()">Cerrar sesión</span></li>
+            </ul>
+          </div>
+          <a class="nav-link" href="#">&nbsp;&nbsp;{{usuario}}</a>
+      </div>
+    </div>
+    <!-- Collapsible wrapper -->
+  </div>
+  <!-- Container wrapper -->
+</nav>
 <!-- Section: Design Block -->
 <section class="background-radial-gradient overflow-hidden">
   
@@ -49,7 +115,7 @@
                   </div>
                   <div class="col-md-6 mb-4">
                     <div class="form-outline">
-                      <input type="text" id="formRegFecAlta" class="datepicker form-control" data-date-format="yy-mm-dd" [(ngModel)]="dataRegister.FECHAALTA" name="FECHAALTA"/>
+                      <input type="text" id="formRegFecAlta" class="datepicker form-control" data-date-format="yyyy-mm-dd" [(ngModel)]="dataRegister.FECHAALTA" name="FECHAALTA"/>
                       <label class="form-label" for="formRegFecAlta">Fecha de alta</label>
                     </div>
                   </div>

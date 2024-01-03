@@ -15,11 +15,13 @@ export class LoginComponent implements OnInit{
     "LOGIN": "",
     "PASSWORD": ""
   };
+  usuario;
   constructor(
     private service: LocalServiceService,
     private router: Router
     ) {
-
+      this.usuario = localStorage.getItem("usuario");
+      console.log("usuario obtenido:::::::::: "+this.usuario);
     }
     data: any;
     responseRegister: any;
@@ -27,6 +29,10 @@ export class LoginComponent implements OnInit{
       $(document).ready(function () {
         console.log("cargando javascript del login:::::::");
       });
+      if(this.usuario!="" && this.usuario!=undefined){
+        console.log("Ya se identifico el usuario:::::::"+this.usuario );
+        this.goHome();
+      }
     }
     prepareAccess(){
       var ngInstance=this;
@@ -47,6 +53,8 @@ export class LoginComponent implements OnInit{
               text: "se redireccionara a la lista de usuarios para su consulta",
               timer: 5000,
             }).then(function(result) {
+              localStorage.setItem("usuario",ngInstance.responseRegister[0].LOGIN);
+              console.log(localStorage.getItem("usuario"));
               ngInstance.goHome();
             });
           }

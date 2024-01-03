@@ -1,10 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import axios from 'axios';
 @Injectable({
   providedIn: 'root'
 })
 /* se exporta el nombre del service para ser usado por un componente */
+
 export class LocalServiceService {
 
   constructor(
@@ -48,14 +50,14 @@ export class LocalServiceService {
     var dataRegister=JSON.parse(str);
     var complement=""+dataRegister.LOGIN+"/"+dataRegister.PASSWORD+"/"+dataRegister.NOMBRE+"/"+dataRegister.APELLIDO_PATERNO+"/"+dataRegister.APELLIDO_PATERNO+"/"+dataRegister.CLIENTE+"/"+dataRegister.STATUS+"/"+dataRegister.FECHAALTA;
     var url='http://localhost:9999/service/setOneUserADEA/'+complement;
-    return this.http.get<any>(url).toPromise()
+    return axios.post(url);
   }
   sendUserUpdate(data:any) { 
     var str=JSON.stringify(data);
     var dataRegister=JSON.parse(str);
     var complement=""+dataRegister.LOGIN+"/"+dataRegister.NOMBRE+"/"+dataRegister.CLIENTE+"/"+dataRegister.APELLIDO_PATERNO+"/"+dataRegister.APELLIDO_PATERNO+"/"+dataRegister.STATUS+"/"+dataRegister.FECHAALTA;
     var url='http://localhost:9999/service/alterUserADEA/'+complement;
-    return this.http.get<any>(url).toPromise()
+    return axios.post(url);
 
   }
   validateAccessUser(data:any) { 
@@ -70,6 +72,10 @@ export class LocalServiceService {
     var dataDeleteUser=JSON.parse(str);
     var complement=""+dataDeleteUser.LOGIN+"/"+dataDeleteUser.NOMBRE;
     var url='http://localhost:9999/service/deleteUserADEA/'+complement;
-    return this.http.get<any>(url).toPromise()
+    return axios.post(url);
+  }
+  getDataRedis() { 
+    var url='http://localhost:9999/redisService/getPapers';
+    return axios.get(url);
   }
 }

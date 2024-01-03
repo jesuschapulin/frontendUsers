@@ -11,6 +11,7 @@ import { LoginComponent } from './login/login.component';
 import { UpdateComponent } from './update/update.component';
 import { HomeComponent } from './home/home.component';
 import { ManageComponent } from './manage/manage.component';
+import { PapersComponent } from './papers/papers.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -18,7 +19,8 @@ import { ManageComponent } from './manage/manage.component';
     LoginComponent,
     HomeComponent,
     UpdateComponent,
-    ManageComponent
+    ManageComponent,
+    PapersComponent
   ],
   imports: [
     FormsModule,

@@ -24,12 +24,13 @@ export class RegisterComponent implements OnInit{
     "FECHAALTA":"",
     "EMAIL":""
   };
-
+  usuario;
   constructor(
     private service: LocalServiceService,
     private router: Router
     ) {
-
+      this.usuario = localStorage.getItem("usuario");
+      console.log("usuario obtenido:::::::::: "+this.usuario);
     }
     data: any;
     responseRegister: any;
@@ -37,13 +38,29 @@ export class RegisterComponent implements OnInit{
       $(document).ready(function () {
         console.log("cargando javascript:::::::");
         $('.datepicker').datepicker(); 
+        $(".viweActive").attr("Style","background-color: lightgrey");
       });
+      /* if(this.usuario=="" || this.usuario==undefined){
+        console.log("No se identifico el usuario:::::::"+this.usuario );
+        this.goLogin();
+      } */
     }
     prepareRegister() {
       var ngInstance=this;
       console.log("cadena a mandar en registro:::::::");
       var date=$('#formRegFecAlta').val(); 
       ngInstance.dataRegister.FECHAALTA=date;
+
+      console.log("date a mandar en registro:::::::"+date);
+      var date2 = new Date(ngInstance.dataRegister.FECHAALTA+" 00:00:00");
+          // Get year, month, and day part from the date
+          var year = date2.toLocaleString("default", { year: "numeric" });
+          var month = date2.toLocaleString("default", { month: "2-digit" });
+          var day = date2.toLocaleString("default", { day: "2-digit" });
+          // Generate yyyy-mm-dd date string
+          var formattedDate = day + "-" + month + "-" + year;
+          console.log(formattedDate);
+          ngInstance.dataRegister.FECHAALTA=formattedDate;
       $(document).ready(function () {
         ngInstance.service.sendUserRegister(ngInstance.dataRegister).then(res => {
           var str = JSON.stringify(res);
@@ -73,5 +90,13 @@ export class RegisterComponent implements OnInit{
     }
     goHome() {
       this.router.navigateByUrl('/home');
+    }
+    goLogin() {
+      this.router.navigateByUrl('/login');
+    }
+    goCloseSession() {
+      console.log("cerrando sesión:::::::");
+      localStorage.removeItem('usuario');
+      location.reload();
     }
 }

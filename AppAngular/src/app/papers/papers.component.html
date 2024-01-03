@@ -33,15 +33,15 @@
           <li class="nav-item">
             <button type="button" class="btn btn-light"><span (click)="goHome()">Consulta</span> </button>
 
-            <button type="button" class="btn btn-light viweActive"><span (click)="goManage()">Administración</span> </button>
-          </li>
+            <button type="button" class="btn btn-light"><span (click)="goManage()">Administración</span> </button>
+            <button type="button" class="btn btn-light viweActive"><span (click)="goPapers()">Papers</span> </button>
+        
+        </li>
         </ul>
         <!-- Left links -->
   
         <div class="d-flex align-items-center">
-          <button data-mdb-ripple-init type="button" class="btn btn-primary me-3" (click)="goRegister()">
-            Agregar usuario
-          </button>
+          
           <!-- Avatar -->
             <div class="dropdown">
                 <img
@@ -67,55 +67,23 @@
     </div>
     <!-- Container wrapper -->
   </nav>
-  <!-- Navbar -->
-<table class="table align-middle mb-0 bg-white">
-    <thead class="bg-light">
-      <tr>
-        <th>Nombre</th>
-        <th>Login</th>
-        <th>Fecha alta</th>
-        <th>Estatus</th>
-        <th>Action</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="
-                let usuario of data;
-                index as i
-                "
-            attr.id="usercard{{ usuario.id }}">
-        <td>
-          <div class="d-flex align-items-center">
-            <img
-                src="https://mdbootstrap.com/img/new/avatars/8.jpg"
-                alt=""
-                style="width: 45px; height: 45px"
-                class="rounded-circle"
-                />
-            <div class="ms-3">
-              <p class="fw-bold mb-1">{{ usuario.NOMBRE }}</p>
-              <p class="text-muted mb-0">{{ usuario.EMAIL }}</p>
+  <body>
+    <main>
+        <div class="container-md">
+          <div class="row row-cols-1 row-cols-md-3 g-4">
+            <div class="col" *ngFor="let p of data">
+              <div class="card">
+                <img src="https://mdbcdn.b-cdn.net/img/new/standard/city/041.webp" class="card-img-top"
+                  alt="Hollywood Sign on The Hill" />
+                <div class="card-body">
+                  <h5 class="card-title">{{p.bibjson.title}}</h5>
+                  <p class="card-text">
+                    {{p.bibjson.abstract}}
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
-        </td>
-        <td>
-          <p class="fw-normal mb-1">{{ usuario.LOGIN }}</p>
-          <p class="text-muted mb-0">IT department</p>
-        </td>
-        <td>
-          <span>{{usuario.FECHAALTA}}</span>
-        </td>
-        <td>{{ usuario.STATUS }}</td>
-        <td>
-          <span class="btn btn-link btn-sm btn-rounded" 
-            (click)="EditUser(usuario.LOGIN)">
-            Editar
-        </span>
-          <span class="btn btn-link btn-sm btn-rounded"
-            (click)="deleteUser(usuario.LOGIN,usuario.NOMBRE)">
-            Eliminar
-        </span>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+        </div>
+    </main>
+  </body>
