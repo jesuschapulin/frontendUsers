@@ -1,0 +1,63 @@
+/AppAngular/.DS_STORE
+
+/AppAngular/dist/
+/AppAngular/bazel-out
+/AppAngular/integration/bazel/bazel-*
+/AppAngular/*.log
+/AppAngular/node_modules/
+
+# CircleCI temporary file for cache key computation.
+# See `save_month_to_file` in `.circleci/config.yml`.
+/AppAngular/month.txt
+
+# Include when developing application packages.
+/AppAngular/ubspec.lock
+/AppAngular/.c9
+/AppAngular/.idea/
+/AppAngular/.devcontainer/*
+/AppAngular/!.devcontainer/README.md
+/AppAngular/!.devcontainer/recommended-devcontainer.json
+/AppAngular/!.devcontainer/recommended-Dockerfile
+/AppAngular/.settings/
+/AppAngular/.vscode/launch.json
+/AppAngular/.vscode/settings.json
+/AppAngular/.vscode/tasks.json
+/AppAngular/*.swo
+/AppAngular/*.swp
+/AppAngular/modules/.settings
+/AppAngular/modules/.vscode
+/AppAngular/.vimrc
+/AppAngular/.nvimrc
+
+# Don't check in secret files
+/AppAngular/*secret.js
+
+# Ignore npm/yarn debug log
+/AppAngular/npm-debug.log
+/AppAngular/yarn-error.log
+
+# build-analytics
+/AppAngular/.build-analytics
+
+# rollup-test output
+/AppAngular/modules/rollup-test/dist/
+
+# User specific bazel settings
+/AppAngular/.bazelrc.user
+
+# User specific ng-dev settings
+/AppAngular/.ng-dev.user*
+
+.notes.md
+/AppAngular/baseline.json
+
+# Ignore .history for the xyz.local-history VSCode extension
+/AppAngular/.history
+
+# Husky
+/AppAngular/.husky/_
+/AppAngular/aio/content/examples/.DS_Store
+
+
+# Ignore cache created with the Angular CLI.
+/AppAngular/.angular/
