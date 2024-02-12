@@ -1,5 +1,5 @@
 <!-- Navbar -->
-<nav class="navbar navbar-expand-lg navbar-light bg-body-tertiary">
+<nav class="navbar navbar-expand-lg navbar-light bg-body-tertiary" *ngIf="usuario!='' &amp;&amp; usuario!=null">
   <!-- Container wrapper -->
   <div class="container">
     <!-- Navbar brand -->
@@ -90,21 +90,41 @@
                     <div class="form-outline mb-4">
                         <input type="text" id="formRegUsuario" class="form-control" [(ngModel)]="dataRegister.LOGIN" name="LOGIN"/>
                         <label class="form-label" for="formRegUsuario">Usuario</label>
+                        <label class="form-label" 
+                               for="formRegUsuario" 
+                               *ngIf="errors.user==true"
+                               style="color:red"
+                               >&nbsp;{{messages.user}}</label>
                     </div>
                   <div class="form-outline mb-4">
                     <input type="text" id="formRegNombre" class="form-control" [(ngModel)]="dataRegister.NOMBRE" name="NOMBRE"/>
                     <label class="form-label" for="formRegNombre">Nombre</label>
+                    <label class="form-label" 
+                               for="formRegNombre" 
+                               *ngIf="errors.nombre==true"
+                               style="color:red"
+                               >&nbsp;{{messages.nombre}}</label>
                   </div>
                   <div class="col-md-6 mb-4">
                     <div class="form-outline">
                       <input type="text" id="form3Example1" class="form-control" [(ngModel)]="dataRegister.APELLIDO_PATERNO" name="APELLIDO_PATERNO"/>
                       <label class="form-label" for="form3Example1">Apellido paterno</label>
+                      <label class="form-label" 
+                               for="form3Example1" 
+                               *ngIf="errors.apaterno==true"
+                               style="color:red"
+                               >&nbsp;{{messages.apaterno}}</label>
                     </div>
                   </div>
                   <div class="col-md-6 mb-4">
                     <div class="form-outline">
                       <input type="text" id="form3Example2" class="form-control" [(ngModel)]="dataRegister.APELLIDO_MATERNO" name="APELLIDO_MATERNO"/>
                       <label class="form-label" for="form3Example2">Apellido materno</label>
+                      <label class="form-label" 
+                               for="form3Example2" 
+                               *ngIf="errors.amaterno==true"
+                               style="color:red"
+                               >&nbsp;{{messages.amaterno}}</label>
                     </div>
                   </div>
                   <div class="col-md-6 mb-4">
@@ -115,22 +135,30 @@
                   </div>
                   <div class="col-md-6 mb-4">
                     <div class="form-outline">
-                      <input type="text" id="formRegFecAlta" class="datepicker form-control" data-date-format="yyyy-mm-dd" [(ngModel)]="dataRegister.FECHAALTA" name="FECHAALTA"/>
-                      <label class="form-label" for="formRegFecAlta">Fecha de alta</label>
+                      <input type="text" id="formRegFecVigencia" class="datepicker form-control" 
+                      data-date-format="yyyy-mm-dd" [(ngModel)]="dataRegister.FECHA_VIGENCIA" name="FECHA_VIGENCIA"/>
+                      <label class="form-label" for="formRegFecVigencia">Fecha de vigencia</label>
+                      <label class="form-label" 
+                               for="formRegFecVigencia" 
+                               *ngIf="errors.fechavigencia==true"
+                               style="color:red"
+                               >&nbsp;{{messages.fechavigencia}}</label>
                     </div>
                   </div>
-                  <div class="col-md-6 mb-4">
-                    <div class="form-outline">
-                      <!-- <input type="text" id="formRegStatus" class="form-control" />
-                      <label class="form-label" for="formRegStatus">Estado activo</label> -->
-                      <div class="select">
+                  <!-- <div class="col-md-6 mb-4">
+                    <input type="text" id="formRegFecBaja" class="datepicker form-control" 
+                      data-date-format="yyyy-mm-dd" [(ngModel)]="dataRegister.FECHABAJA" name="FECHABAJA"/>
+                    <label class="form-label" for="formRegFecBaja">Fecha de baja</label>
+                  </div> -->
+                  <!-- <div class="col-md-6 mb-4">
+                      <div class="select col-md-4">
                         <select
                           name="select-estado"
                           [(ngModel)]="dataRegister.STATUS">
-                          <option value="" disabled selected hidden>Estado</option>
-                          <!-- <option [value]="item" *ngFor="let item of listaEstatus">
+                          <option value="A" disabled selected hidden>Estado</option>
+                          <option [value]="item" *ngFor="let item of listaEstatus">
                             {{ item }}
-                          </option> -->
+                          </option> 
                           <option value="A">
                             Activo
                           </option>
@@ -142,20 +170,29 @@
                           </option>
                         </select>
                       </div>
-                    </div>
-                  </div>
+                  </div> -->
                 </div>
   
                 <!-- Email input -->
                 <div class="form-outline mb-4">
                   <input type="email" id="form3Example4" class="form-control" [(ngModel)]="dataRegister.EMAIL" name="EMAIL"/>
                   <label class="form-label" for="form3Example4">Email</label>
+                  <label class="form-label" 
+                               for="form3Example4" 
+                               *ngIf="errors.correo==true"
+                               style="color:red"
+                               >&nbsp;{{messages.correo}}</label>
                 </div>
   
                 <!-- Password input -->
                 <div class="form-outline mb-4">
                   <input type="password" id="form3Example5" class="form-control" [(ngModel)]="dataRegister.PASSWORD" name="PASSWORD"/>
                   <label class="form-label" for="form3Example5">Contraseña</label>
+                  <label class="form-label" 
+                               for="form3Example5" 
+                               *ngIf="errors.password==true"
+                               style="color:red"
+                               >&nbsp;{{messages.password}}</label>
                 </div>
   
                 <!-- Submit button -->

@@ -41,10 +41,11 @@ export class LoginComponent implements OnInit{
         ngInstance.service.validateAccessUser(ngInstance.dataLogin).then(res => {
           var str = JSON.stringify(res);
           ngInstance.responseRegister = JSON.parse(str);
-          if(str.includes("fallo")){
+          console.log("objeto login:::::::"+ngInstance.responseRegister.length);
+          if(ngInstance.responseRegister.length==0){
             Swal.fire(
               'Fallo el acceso del usuario!',
-              'puede ser que el nombre del usuario no exista o la contraseña se a incorrecta, intenta con datos diferentes por favor.',
+              'puede ser que el nombre del usuario no exista o la contraseña sea incorrecta, intenta con datos diferentes por favor.',
               'error'
             );
           }else{

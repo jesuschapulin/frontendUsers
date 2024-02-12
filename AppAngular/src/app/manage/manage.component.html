@@ -74,6 +74,8 @@
         <th>Nombre</th>
         <th>Login</th>
         <th>Fecha alta</th>
+        <th>Fecha vigencia</th>
+        <th>Fecha revocado</th>
         <th>Estatus</th>
         <th>Action</th>
       </tr>
@@ -100,18 +102,28 @@
         </td>
         <td>
           <p class="fw-normal mb-1">{{ usuario.LOGIN }}</p>
-          <p class="text-muted mb-0">IT department</p>
+          <!-- <p class="text-muted mb-0">IT department</p> -->
         </td>
         <td>
           <span>{{usuario.FECHAALTA}}</span>
         </td>
+        <td>
+          <span>{{usuario.FECHA_VIGENCIA}}</span>
+        </td>
+        <td>
+          <span>{{usuario.FECHAREVOCADO}}</span>
+        </td>
         <td>{{ usuario.STATUS }}</td>
         <td>
-          <span class="btn btn-link btn-sm btn-rounded" 
+          <span class="btn btn-success btn-sm btn-rounded" 
             (click)="EditUser(usuario.LOGIN)">
             Editar
-        </span>
-          <span class="btn btn-link btn-sm btn-rounded"
+        </span>&nbsp; 
+        <span class="btn btn-warning btn-sm btn-rounded"
+            (click)="inactiveUser(usuario.LOGIN,usuario.NOMBRE)">
+            inactivar
+        </span>&nbsp; 
+        <span class="btn btn-danger btn-sm btn-rounded"
             (click)="deleteUser(usuario.LOGIN,usuario.NOMBRE)">
             Eliminar
         </span>

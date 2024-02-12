@@ -22,8 +22,36 @@ export class UpdateComponent implements OnInit {
     "PASSWORD": "",
     "CLIENTE": "",
     "FECHAALTA":"",
+    "FECHABAJA":"",
+    "FECHA_VIGENCIA":"",
     "EMAIL":""
   };
+  errors = {
+    user:false,
+    nombre:false,
+    apaterno:false,
+    amaterno:false,
+    cliente:false,
+    fechaalta:false,
+    fechabaja:false,
+    fechavigencia:false,
+    estado:false,
+    correo:false,
+    password:false
+  }
+  messages={
+    user:"(El usuario no puede estar vació)",
+    nombre:"(El nombre no puede estar vació)",
+    apaterno:"(El apellido paterno no puede estar vació)",
+    amaterno:"(El apellido materno no puede estar vació)",
+    cliente:"(El numero de cliente no puede estar vació)",
+    fechaalta:"(La fecha de alta es necesaria)",
+    fechabaja:"(La fecha de baja es necesaria)",
+    fechavigencia:"(La fecha de vigencia es necesaria)",
+    estado:"(se debe seleccionar el estado del usuario)",
+    correo:"(El correo no puede estar vació)",
+    password:"(La contraseña no puede estar vacía)"
+  }
   usuario;
   login= "";
   constructor(
@@ -72,8 +100,8 @@ export class UpdateComponent implements OnInit {
           ngInstance.dataEdition.STATUS=ngInstance.responseEdition[0].STATUS;
           ngInstance.dataEdition.CLIENTE=ngInstance.responseEdition[0].CLIENTE;
           ngInstance.dataEdition.EMAIL=ngInstance.responseEdition[0].EMAIL;
-          ngInstance.dataEdition.FECHAALTA=ngInstance.responseEdition[0].FECHAALTA;
-          var date = new Date(ngInstance.dataEdition.FECHAALTA);
+          ngInstance.dataEdition.FECHA_VIGENCIA=ngInstance.responseEdition[0].FECHA_VIGENCIA;
+          var date = new Date(ngInstance.dataEdition.FECHA_VIGENCIA);
           // Get year, month, and day part from the date
           var year = date.toLocaleString("default", { year: "numeric" });
           var month = date.toLocaleString("default", { month: "2-digit" });
@@ -82,10 +110,10 @@ export class UpdateComponent implements OnInit {
           var formattedDate = year + "-" + month + "-" + day;
           console.log("fecha formada desde form:::::::::::::::::::::::");
           console.log(formattedDate);
-          ngInstance.dataEdition.FECHAALTA=formattedDate;
+          ngInstance.dataEdition.FECHA_VIGENCIA=formattedDate;
           console.log("cargando datos al formulario:::::::"+ngInstance.responseEdition[0].LOGIN);
           console.log(ngInstance.dataEdition);
-          if(str.includes("fallo")){
+          if(str.includes("fallo") ){
             Swal.fire(
               'Fallo la obtencion del usuario!',
               'puede ser que se perdiera la conexion con el servidor.',
@@ -106,42 +134,59 @@ export class UpdateComponent implements OnInit {
     }
     prepareEdition() {
       var ngInstance=this;
-      console.log("cadena a mandar en registro:::::::");
-      var date=$('#formEditFecAlta').val(); 
-      ngInstance.dataEdition.FECHAALTA=date;
-
-      console.log("date a mandar en registro:::::::"+date);
-      var date2 = new Date(ngInstance.dataEdition.FECHAALTA+" 00:00:00");
-          // Get year, month, and day part from the date
-          var year = date2.toLocaleString("default", { year: "numeric" });
-          var month = date2.toLocaleString("default", { month: "2-digit" });
-          var day = date2.toLocaleString("default", { day: "2-digit" });
-          // Generate yyyy-mm-dd date string
-          var formattedDate = day + "-" + month + "-" + year;
-          console.log(formattedDate);
-          ngInstance.dataEdition.FECHAALTA=formattedDate;
+      ngInstance.dataEdition.FECHA_VIGENCIA=$('#formEditFecVigencia').val();
+      var date1 = new Date(ngInstance.dataEdition.FECHA_VIGENCIA+" 00:00:00");
+      ngInstance.dataEdition.FECHA_VIGENCIA=ngInstance.formateData(""+date1);
       $(document).ready(function () {
-        ngInstance.service.sendUserUpdate(ngInstance.dataEdition).then(res => {
-          var str = JSON.stringify(res);
-          ngInstance.responseEdition = JSON.parse(str);
-          if(str.includes("fallo")){
+        ngInstance.errors.nombre = ngInstance.dataEdition.NOMBRE=="" ? true : false;
+        ngInstance.errors.apaterno = ngInstance.dataEdition.APELLIDO_PATERNO=="" ? true : false;
+        ngInstance.errors.amaterno = ngInstance.dataEdition.APELLIDO_MATERNO=="" ? true : false;
+        ngInstance.errors.fechavigencia = ngInstance.dataEdition.FECHA_VIGENCIA=="" ? true : false;
+        ngInstance.errors.correo = ngInstance.dataEdition.EMAIL=="" ? true : false;
+        console.log("errores:::: "+ngInstance.errors.user);
+        if(ngInstance.errors.nombre==true
+          || ngInstance.errors.apaterno==true || ngInstance.errors.amaterno==true 
+          || ngInstance.errors.fechavigencia==true || ngInstance.errors.correo==true 
+          ){
             Swal.fire(
-              'Fallo la actualizacion del usuario!',
-              'puede ser que se perdiera la conexion con el servidor.',
+              'No se puede completar el registro!',
+              'Existen errores en los campos, favor de verificar.',
               'error'
             );
           }else{
-            Swal.fire({
-              title: "Datos Actualizados!",
-              text: "El usuario se ha actualizado sin problema",
-              timer: 1000,
-            }).then(function(result) {
-              ngInstance.goHome();
+            ngInstance.service.sendUserUpdate(ngInstance.dataEdition).then(res => {
+              var str = JSON.stringify(res);
+              ngInstance.responseEdition = JSON.parse(str);
+              if(str.includes("fallo")){
+                Swal.fire(
+                  'Fallo la actualizacion del usuario!',
+                  'puede ser que se perdiera la conexion con el servidor.',
+                  'error'
+                );
+              }else{
+                Swal.fire({
+                  title: "Datos Actualizados!",
+                  text: "El usuario se ha actualizado sin problema",
+                  timer: 1000,
+                }).then(function(result) {
+                  ngInstance.goHome();
+                });
+              }
             });
           }
-        });
       });
       
+    }
+    formateData(fecha: String){
+          var date = new Date(""+fecha);
+          // Get year, month, and day part from the date
+          var year = date.toLocaleString("default", { year: "numeric" });
+          var month = date.toLocaleString("default", { month: "2-digit" });
+          var day = date.toLocaleString("default", { day: "2-digit" });
+          // Generate yyyy-mm-dd date string
+          /* var formattedDate = year + "-" + month + "-" + day; */
+          var formattedDate = day + "-" + month + "-" + year;
+      return formattedDate;
     }
     goLogin() {
       this.router.navigateByUrl('/login');

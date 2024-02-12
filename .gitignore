@@ -61,3 +61,4 @@
 
 # Ignore cache created with the Angular CLI.
 /AppAngular/.angular/
+/AppAngular/.angular/cache/

@@ -14,7 +14,7 @@ declare var $: any;
 export class ManageComponent implements OnInit{
   data: any;
   responseRegister: any;
-  dataDeleteAccess = {
+  dataUser = {
     "LOGIN": "",
     "NOMBRE": ""
   };
@@ -42,10 +42,17 @@ export class ManageComponent implements OnInit{
       this.service.getInfoFilters().then(res => {
         var str = JSON.stringify(res);
         this.data = JSON.parse(str);
-        console.log(this.data);
         for (let usr in this.data) {
-          console.log(this.data[usr].FECHAALTA);
-          var date = new Date(this.data[usr].FECHAALTA);
+          this.data[usr].FECHAALTA=this.formateData(this.data[usr].FECHAALTA);
+          this.data[usr].FECHA_VIGENCIA=this.formateData(this.data[usr].FECHA_VIGENCIA);
+          this.data[usr].FECHAREVOCADO= 
+              (this.data[usr].FECHAREVOCADO!="" && this.data[usr].FECHAREVOCADO!=null) ? this.formateData(this.data[usr].FECHAREVOCADO) : "";
+          console.log(this.data[usr]);
+        }
+      });
+    }
+    formateData(fecha: String){
+          var date = new Date(""+fecha);
           // Get year, month, and day part from the date
           var year = date.toLocaleString("default", { year: "numeric" });
           var month = date.toLocaleString("default", { month: "2-digit" });
@@ -53,12 +60,7 @@ export class ManageComponent implements OnInit{
           // Generate yyyy-mm-dd date string
           /* var formattedDate = year + "-" + month + "-" + day; */
           var formattedDate = day + "-" + month + "-" + year;
-          console.log("fecha formada desde tabla:::::::::::::::::::::::");
-          console.log(formattedDate);
-          this.data[usr].FECHAALTA=formattedDate;
-        }
-        console.log(this.data);
-      });
+      return formattedDate;
     }
     goRegister() {
       this.router.navigateByUrl('/register');
@@ -83,23 +85,50 @@ export class ManageComponent implements OnInit{
     }
     deleteUser(login: String, nombre: String) {
       var ngInstance=this;
-      ngInstance.dataDeleteAccess.LOGIN=""+login;
-      ngInstance.dataDeleteAccess.NOMBRE=""+nombre;
+      ngInstance.dataUser.LOGIN=""+login;
+      ngInstance.dataUser.NOMBRE=""+nombre;
       console.log("cadena a mandar en eliminacion:::::::"+login);
       $(document).ready(function () {
-        ngInstance.service.sendDeleteUser(ngInstance.dataDeleteAccess).then(res => {
+        ngInstance.service.sendDeleteUser(ngInstance.dataUser).then(res => {
           var str = JSON.stringify(res);
           ngInstance.responseRegister = JSON.parse(str);
           if(str.includes("fallo")){
             Swal.fire(
-              'Fallo la eliminacion del usuario!',
-              'puede ser que el nombre del usuario no exista o la contraseña se a incorrecta, intenta con datos diferentes por favor.',
+              'Fallo la eliminación del usuario!',
+              'puede ser que el nombre del usuario no exista',
               'error'
             );
           }else{
             Swal.fire({
               title: "Se elimino el usuario exitosamente!",
-              text: "se ah quitado de la lista automaticamente",
+              text: "se ah quitado de la lista automáticamente",
+              timer: 2000,
+            }).then(function(result) {
+              ngInstance.prepareSearch();
+            });
+          }
+        });
+      });
+    }
+    inactiveUser(login: String, nombre: String) {
+      var ngInstance=this;
+      ngInstance.dataUser.LOGIN=""+login;
+      ngInstance.dataUser.NOMBRE=""+nombre;
+      console.log("cadena a mandar en inactivacion:::::::"+login);
+      $(document).ready(function () {
+        ngInstance.service.sendInactiveUser(ngInstance.dataUser).then(res => {
+          var str = JSON.stringify(res);
+          ngInstance.responseRegister = JSON.parse(str);
+          if(str.includes("fallo")){
+            Swal.fire(
+              'Fallo la inactivación del usuario!',
+              'puede ser que el nombre del usuario no exista',
+              'error'
+            );
+          }else{
+            Swal.fire({
+              title: "Se inactivo el usuario exitosamente!",
+              text: "se ha restringido el acceso automáticamente",
               timer: 2000,
             }).then(function(result) {
               ngInstance.prepareSearch();

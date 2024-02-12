@@ -94,17 +94,32 @@
                   <div class="form-outline mb-4">
                     <input type="text" id="formRegNombre" class="form-control" [(ngModel)]="dataEdition.NOMBRE" name="NOMBRE"/>
                     <label class="form-label" for="formRegNombre">Nombre</label>
+                    <label class="form-label" 
+                               for="formRegNombre" 
+                               *ngIf="errors.nombre==true"
+                               style="color:red"
+                               >&nbsp;{{messages.nombre}}</label>
                   </div>
                   <div class="col-md-6 mb-4">
                     <div class="form-outline">
                       <input type="text" id="form3Example1" class="form-control" [(ngModel)]="dataEdition.APELLIDO_PATERNO" name="APELLIDO_PATERNO"/>
                       <label class="form-label" for="form3Example1">Apellido paterno</label>
+                      <label class="form-label" 
+                               for="form3Example1" 
+                               *ngIf="errors.apaterno==true"
+                               style="color:red"
+                               >&nbsp;{{messages.apaterno}}</label>
                     </div>
                   </div>
                   <div class="col-md-6 mb-4">
                     <div class="form-outline">
                       <input type="text" id="form3Example2" class="form-control" [(ngModel)]="dataEdition.APELLIDO_MATERNO" name="APELLIDO_MATERNO"/>
                       <label class="form-label" for="form3Example2">Apellido materno</label>
+                      <label class="form-label" 
+                               for="form3Example2" 
+                               *ngIf="errors.amaterno==true"
+                               style="color:red"
+                               >&nbsp;{{messages.amaterno}}</label>
                     </div>
                   </div>
                   <div class="col-md-6 mb-4">
@@ -115,22 +130,22 @@
                   </div>
                   <div class="col-md-6 mb-4">
                     <div class="form-outline">
-                      <input type="text" id="formEditFecAlta" class="datepicker form-control" data-date-format="yyyy-mm-dd" [(ngModel)]="dataEdition.FECHAALTA" name="FECHAALTA"/>
-                      <label class="form-label" for="formEditFecAlta">Fecha de alta</label>
+                      <input type="text" id="formEditFecVigencia" class="datepicker form-control" data-date-format="yyyy-mm-dd" [(ngModel)]="dataEdition.FECHA_VIGENCIA" name="FECHAALTA"/>
+                      <label class="form-label" for="formEditFecVigencia">Fecha de vigencia</label>
+                      <label class="form-label" 
+                               for="formRegFecVigencia" 
+                               *ngIf="errors.fechavigencia==true"
+                               style="color:red"
+                               >&nbsp;{{messages.fechavigencia}}</label>
                     </div>
                   </div>
                   <div class="col-md-6 mb-4">
                     <div class="form-outline">
-                      <!-- <input type="text" id="formRegStatus" class="form-control" />
-                      <label class="form-label" for="formRegStatus">Estado activo</label> -->
                       <div class="select">
                         <select
                           name="select-estado"
                           [(ngModel)]="dataEdition.STATUS">
                           <option value="" disabled selected hidden>Estado</option>
-                          <!-- <option [value]="item" *ngFor="let item of listaEstatus">
-                            {{ item }}
-                          </option> -->
                           <option value="A">
                             Activo
                           </option>
@@ -150,6 +165,11 @@
                 <div class="form-outline mb-4">
                   <input type="email" id="form3Example4" class="form-control" [(ngModel)]="dataEdition.EMAIL" name="EMAIL"/>
                   <label class="form-label" for="form3Example4">Email</label>
+                  <label class="form-label" 
+                               for="form3Example4" 
+                               *ngIf="errors.correo==true"
+                               style="color:red"
+                               >&nbsp;{{messages.correo}}</label>
                 </div>
   
                 <!-- Submit button -->
