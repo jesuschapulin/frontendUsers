@@ -185,8 +185,8 @@
 			console.log("contra"+pass);
 			$.get("http://127.0.0.1:9999/service/getOneUserADEA/"+usuario+"/"+pass,function(res)
 				{
-				console.log(res);
-                res=JSON.parse(res);
+				//console.log(res);
+                //res=JSON.parse(res);
                 var html="";
                 if(res!="")
                 {
@@ -199,7 +199,7 @@
                   		$("#box-managment").show();
                   		$(".title-operation").text("Usuarios ADEA");
 						$("#btn-firstReg").hide();
-                  		getAllUsers("","","");
+                  		getAllUsers("","","","");
                   	}
                   });
               	}
@@ -213,8 +213,8 @@
 		$.get(url,function(res)
           {
 	          	var html='';
-	          	res=JSON.parse(res);
-	          	console.log(res);
+	          	// res=JSON.parse(res);
+	          	// console.log(res);
               $.each(res, function(i, item)
               {
                
@@ -318,8 +318,8 @@
 		console.log("nuevo:::::"+usuario+" ::: "+stateselect);
 		$.post("http://localhost:9999/service/setOneUserADEA/"+usuario+"/"+pass+"/"+nombre+"/"+apaterno+"/"+amaterno+"/"+cliente+"/"+stateselect+"/"+formattedDate,function(res)
 			{
-				console.log(""+res);
-				res=JSON.parse(res);
+				// console.log(""+res);
+				// res=JSON.parse(res);
                 var html="";
                 if(res!="")
                 {
