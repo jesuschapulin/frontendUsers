@@ -50,17 +50,8 @@ export class HomeComponent implements OnInit{
         
         for (let usr in this.data) {
           console.log(this.data[usr].FECHAALTA);
-          var date = new Date(this.data[usr].FECHAALTA);
-          // Get year, month, and day part from the date
-          var year = date.toLocaleString("default", { year: "numeric" });
-          var month = date.toLocaleString("default", { month: "2-digit" });
-          var day = date.toLocaleString("default", { day: "2-digit" });
-          // Generate yyyy-mm-dd date string
-          /* var formattedDate = year + "-" + month + "-" + day; */
-          var formattedDate = day + "-" + month + "-" + year;
-          console.log("fecha formada desde tabla:::::::::::::::::::::::");
-          console.log(formattedDate);
-          this.data[usr].FECHAALTA=formattedDate;
+          var date = new Date(this.data[usr].FECHAALTA+" 00:00:00");
+          this.data[usr].FECHAALTA=this.formateData(""+date);
         }
         console.log(this.data);
       });
@@ -188,6 +179,17 @@ export class HomeComponent implements OnInit{
                 });
               }
       });
+    }
+    formateData(fecha: String){
+      var date = new Date(""+fecha);
+      // Get year, month, and day part from the date
+      var year = date.toLocaleString("default", { year: "numeric" });
+      var month = date.toLocaleString("default", { month: "2-digit" });
+      var day = date.toLocaleString("default", { day: "2-digit" });
+      // Generate yyyy-mm-dd date string
+      /* var formattedDate = year + "-" + month + "-" + day; */
+      var formattedDate = day + "-" + month + "-" + year;
+      return formattedDate;
     }
     searchUserByStatus(status:String) {
       var ngInstance=this;

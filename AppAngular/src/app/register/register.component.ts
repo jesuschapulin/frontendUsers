@@ -130,7 +130,7 @@ export class RegisterComponent implements OnInit{
         var day = date.toLocaleString("default", { day: "2-digit" });
         // Generate yyyy-mm-dd date string
         /* var formattedDate = year + "-" + month + "-" + day; */
-        var formattedDate = day + "-" + month + "-" + year;
+        var formattedDate = year + "-" + month + "-" + day;
     return formattedDate;
   }
     goManage() {

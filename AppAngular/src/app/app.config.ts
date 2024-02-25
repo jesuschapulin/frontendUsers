@@ -12,6 +12,7 @@ import { UpdateComponent } from './update/update.component';
 import { HomeComponent } from './home/home.component';
 import { ManageComponent } from './manage/manage.component';
 import { PapersComponent } from './papers/papers.component';
+import { AboutComponent } from './about/about.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -20,7 +21,8 @@ import { PapersComponent } from './papers/papers.component';
     HomeComponent,
     UpdateComponent,
     ManageComponent,
-    PapersComponent
+    PapersComponent,
+    AboutComponent
   ],
   imports: [
     FormsModule,

@@ -101,7 +101,7 @@ export class UpdateComponent implements OnInit {
           ngInstance.dataEdition.CLIENTE=ngInstance.responseEdition[0].CLIENTE;
           ngInstance.dataEdition.EMAIL=ngInstance.responseEdition[0].EMAIL;
           ngInstance.dataEdition.FECHA_VIGENCIA=ngInstance.responseEdition[0].FECHA_VIGENCIA;
-          var date = new Date(ngInstance.dataEdition.FECHA_VIGENCIA);
+          var date = new Date(ngInstance.dataEdition.FECHA_VIGENCIA+" 00:00:00");
           // Get year, month, and day part from the date
           var year = date.toLocaleString("default", { year: "numeric" });
           var month = date.toLocaleString("default", { month: "2-digit" });
@@ -185,7 +185,7 @@ export class UpdateComponent implements OnInit {
           var day = date.toLocaleString("default", { day: "2-digit" });
           // Generate yyyy-mm-dd date string
           /* var formattedDate = year + "-" + month + "-" + day; */
-          var formattedDate = day + "-" + month + "-" + year;
+          var formattedDate = year + "-" + month + "-" + day;
       return formattedDate;
     }
     goLogin() {

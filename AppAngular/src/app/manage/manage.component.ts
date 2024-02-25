@@ -43,10 +43,12 @@ export class ManageComponent implements OnInit{
         var str = JSON.stringify(res);
         this.data = JSON.parse(str);
         for (let usr in this.data) {
-          this.data[usr].FECHAALTA=this.formateData(this.data[usr].FECHAALTA);
-          this.data[usr].FECHA_VIGENCIA=this.formateData(this.data[usr].FECHA_VIGENCIA);
+          var date = new Date(this.data[usr].FECHAALTA+" 00:00:00");
+          var date2 = new Date(this.data[usr].FECHA_VIGENCIA+" 00:00:00");
+          this.data[usr].FECHAALTA=this.formateData(""+date);
+          this.data[usr].FECHA_VIGENCIA=this.formateData(""+date2);
           this.data[usr].FECHAREVOCADO= 
-              (this.data[usr].FECHAREVOCADO!="" && this.data[usr].FECHAREVOCADO!=null) ? this.formateData(this.data[usr].FECHAREVOCADO) : "";
+              (this.data[usr].FECHAREVOCADO!="" && this.data[usr].FECHAREVOCADO!=null) ? this.formateData(""+new Date(this.data[usr].FECHAREVOCADO+" 00:00:00")) : "";
           console.log(this.data[usr]);
         }
       });
