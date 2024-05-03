@@ -5,7 +5,7 @@
 #################################################################################################################
 #################################################################################################################
 #################################################################################################################
-################### usuarios/empresas #####################################################################################
+################### usuarios/empresas ###########################################################################
 #################################################################################################################
 #################################################################################################################
 #################################################################################################################
@@ -43,66 +43,7 @@ END;
 
 
 ###################################### ejecucion de sp que busca por nombre en java 
-package com.example.demo;
 
-import com.example.demo.User;
-import com.example.demo.UserRowMapper;
-
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.HashOperations;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.SqlOutParameter;
-import org.springframework.jdbc.core.SqlParameter;
-import org.springframework.stereotype.Repository;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.security.SecureRandom;
-import java.sql.CallableStatement;
-import java.sql.Types;
-import java.util.Base64;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Properties;
-import java.util.Set;
-
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLException;
-
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
-
-
-import com.google.gson.Gson;
-import java.util.Map;
-
-
-import javax.mail.Authenticator;
-import javax.mail.BodyPart;
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.Multipart;
-import javax.mail.PasswordAuthentication;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeBodyPart;
-import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMultipart;
-
-import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 
 @Override
    public List<empresas> getPruebaSP() {
@@ -130,7 +71,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 
 
 #######################################################################################################
-################### procedimiento que obtiene la lista de empresas en sql #############################
+################### sp que obtiene la lista de empresas en sql #############################
 #######################################################################################################
 
 CREATE OR REPLACE PROCEDURE buscar_empresas(
@@ -202,7 +143,7 @@ END;
         return empresas;
    }
 #######################################################################################################
-####################################sp de login
+#################################### sp de login
 #######################################################################################################
 CREATE OR REPLACE PROCEDURE validarUsuario(
     i_email IN VARCHAR2,
@@ -266,22 +207,28 @@ INSERT INTO sesiones (sesion, fecha_registro, fecha_valida, estado)
 VALUES ('Sesión 2', '2024-05-01', '2024-05-20', 'I');
 
 ############# creacion de procedure para buscar sesiones
-CREATE OR REPLACE PROCEDURE GET_SESIONES(
-    I_ID_USUARIO IN NUMBER,
-    I_SESION IN VARCHAR2 DEFAULT NULL,
-    I_ACCION IN VARCHAR2,
-    o_cursor OUT SYS_REFCURSOR
+create or replace PROCEDURE GET_SESIONES(
+    i_id_usuario IN NUMBER,
+    i_sesion IN VARCHAR2 DEFAULT NULL,
+    i_accion IN VARCHAR2,
+    o_id_sesion OUT NUMBER,
+    o_sesion OUT VARCHAR2,
+    o_fecha_registro OUT VARCHAR2,
+    o_fecha_valida OUT VARCHAR2
 ) IS
 BEGIN
-    OPEN o_cursor FOR
-        SELECT id_sesion, sesion, fecha_registro, fecha_valida
-        FROM sesiones
-        WHERE (I_ACCION = 'vigente' AND id_usuario = I_ID_USUARIO AND estado = 'S')
-           OR (I_ACCION = 'relacion' AND id_usuario = I_ID_USUARIO AND sesion = I_SESION AND estado = 'S')
-           OR (I_ACCION = 'pasados' AND id_usuario = I_ID_USUARIO AND estado = 'N') order by id_sesion desc ;
+    SELECT id_sesion, sesion, fecha_registro, fecha_valida
+    INTO o_id_sesion, o_sesion, o_fecha_registro, o_fecha_valida
+    FROM sesiones
+    WHERE (i_accion = 'vigente' AND id_usuario = i_id_usuario AND estado = 'S')
+    OR (i_accion = 'relacion' AND id_usuario = i_id_usuario AND sesion = i_sesion AND estado = 'S')
+    OR (i_accion = 'pasados' AND id_usuario = i_id_usuario AND estado = 'N') order by id_sesion desc ;
 EXCEPTION
     WHEN NO_DATA_FOUND THEN
-        NULL; -- Manejar la excepción si no se encuentra ningún resultado
+        o_id_sesion := NULL;
+        o_sesion := NULL;
+        o_fecha_registro := NULL;
+        o_fecha_valida := NULL;
 END GET_SESIONES;
 
 ################################## ejecucion en sql
@@ -311,6 +258,45 @@ BEGIN
     DBMS_OUTPUT.PUT_LINE('Fecha de registro: ' || V_FECHA_REGISTRO);
     DBMS_OUTPUT.PUT_LINE('Fecha válida: ' || V_FECHA_VALIDA);
 END;
+------------------------------------------------------------------------------------
+--------------------- alternativa dos comentando valores de ejecucion -------------
+SET SERVEROUTPUT ON;
+
+DECLARE
+    i_id_usuario NUMBER(15) := 1; 
+    i_sesion VARCHAR(255) := ''; 
+    i_accion VARCHAR(255) := 'vigente'; 
+    o_id_sesion NUMBER; 
+    o_sesion VARCHAR(255); 
+    o_fecha_registro VARCHAR(255); 
+    o_fecha_valida VARCHAR(255); 
+BEGIN
+    SELECT id_sesion, sesion, fecha_registro, fecha_valida
+    INTO o_id_sesion, o_sesion, o_fecha_registro, o_fecha_valida
+    FROM sesiones
+    WHERE (i_accion = 'vigente' AND id_usuario = i_id_usuario AND estado = 'S')
+    OR (i_accion = 'relacion' AND id_usuario = i_id_usuario AND sesion = i_sesion AND estado = 'S')
+    OR (i_accion = 'pasados' AND id_usuario = i_id_usuario AND estado = 'N') 
+    ORDER BY id_sesion DESC;
+
+    -- Mostrar los valores recuperados en la consola
+    IF o_id_sesion IS NOT NULL THEN
+        DBMS_OUTPUT.PUT_LINE('ID Sesion: ' || o_id_sesion);
+        DBMS_OUTPUT.PUT_LINE('Sesion: ' || o_sesion);
+        DBMS_OUTPUT.PUT_LINE('Fecha de Registro: ' || o_fecha_registro);
+        DBMS_OUTPUT.PUT_LINE('Fecha Valida: ' || o_fecha_valida);
+    ELSE
+        DBMS_OUTPUT.PUT_LINE('No se encontraron sesiones.');
+    END IF;
+EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+        o_id_sesion := NULL;
+        o_sesion := NULL;
+        o_fecha_registro := NULL;
+        o_fecha_valida := NULL;
+        DBMS_OUTPUT.PUT_LINE('No se encontraron sesiones.');
+END;
+
 
 ################################## ejecucion en java
 @Override
