@@ -1,18 +1,6 @@
 #################################################################################################################
 #################################################################################################################
-#################################################################################################################
-#################################################################################################################
-#################################################################################################################
-#################################################################################################################
-#################################################################################################################
-################### usuarios/empresas ###########################################################################
-#################################################################################################################
-#################################################################################################################
-#################################################################################################################
-#################################################################################################################
-#################################################################################################################
-#################################################################################################################
-#################################################################################################################
+################### pruebas de tablas de empresas ###############################################################
 #################################################################################################################
 #################################################################################################################
 
@@ -176,36 +164,9 @@ END;
 
 #################################################################################################################
 #################################################################################################################
+################### Sesiones ####################################################################################
 #################################################################################################################
 #################################################################################################################
-#################################################################################################################
-#################################################################################################################
-#################################################################################################################
-################### seiones #####################################################################################
-#################################################################################################################
-#################################################################################################################
-#################################################################################################################
-#################################################################################################################
-#################################################################################################################
-#################################################################################################################
-#################################################################################################################
-#################################################################################################################
-#################################################################################################################
-   CREATE TABLE sesiones (
-    id_sesion NUMBER,
-    sesion VARCHAR(255),
-    fecha_registro VARCHAR(20),
-    fecha_valida VARCHAR(20),
-    estado CHAR(1)
-);
-
-   -- Insertar dos registros de ejemplo en la tabla "sesiones"
-INSERT INTO sesiones (sesion, fecha_registro, fecha_valida, estado)
-VALUES ('Sesión 1', '2024-04-30', '2024-05-15', 'A');
-
-INSERT INTO sesiones (sesion, fecha_registro, fecha_valida, estado)
-VALUES ('Sesión 2', '2024-05-01', '2024-05-20', 'I');
-
 ############# creacion de procedure para buscar sesiones
 create or replace PROCEDURE GET_SESIONES(
     i_id_usuario IN NUMBER,
@@ -219,10 +180,14 @@ create or replace PROCEDURE GET_SESIONES(
 BEGIN
     SELECT id_sesion, sesion, fecha_registro, fecha_valida
     INTO o_id_sesion, o_sesion, o_fecha_registro, o_fecha_valida
-    FROM sesiones
-    WHERE (i_accion = 'vigente' AND id_usuario = i_id_usuario AND estado = 'S')
-    OR (i_accion = 'relacion' AND id_usuario = i_id_usuario AND sesion = i_sesion AND estado = 'S')
-    OR (i_accion = 'pasados' AND id_usuario = i_id_usuario AND estado = 'N') order by id_sesion desc ;
+    from(
+        SELECT id_sesion, sesion, fecha_registro, fecha_valida
+        FROM sesiones
+        WHERE (i_accion = 'S' AND id_usuario = i_id_usuario AND estado = 'S')
+        OR (i_accion = 'R' AND id_usuario = i_id_usuario AND sesion = i_sesion AND estado = 'S')
+        OR (i_accion = 'N' AND id_usuario = i_id_usuario AND estado = 'N') order by id_sesion desc
+    )
+    WHERE ROWNUM = 1;
 EXCEPTION
     WHEN NO_DATA_FOUND THEN
         o_id_sesion := NULL;
@@ -232,32 +197,19 @@ EXCEPTION
 END GET_SESIONES;
 
 ################################## ejecucion en sql
-
 DECLARE
-    -- Declaración de variables locales
-    MY_CURSOR SYS_REFCURSOR;
-    V_ID_SESION NUMBER;
-    V_SESION VARCHAR2(100);
-    V_FECHA_REGISTRO VARCHAR2(100);
-    V_FECHA_VALIDA VARCHAR2(100);
+    o_id_sesion  NUMBER;
+    o_sesion  VARCHAR2(100);
+    o_fecha_registro  VARCHAR2(100);
+    o_fecha_valida  VARCHAR2(100);
 BEGIN
-    -- Llama al procedimiento
-    GET_SESIONES(
-        I_ID_USUARIO => 1, -- Reemplaza con el ID de usuario deseado
-        I_SESION => '', -- Reemplaza con la sesión deseada
-        I_ACCION => 'pasados', -- Reemplaza con la acción deseada
-        o_cursor => MY_CURSOR
-    );
-
-    -- Recupera los resultados
-    FETCH MY_CURSOR INTO V_ID_SESION, V_SESION, V_FECHA_REGISTRO, V_FECHA_VALIDA;
-
-    -- Muestra los resultados (puedes adaptarlo según tus necesidades)
-    DBMS_OUTPUT.PUT_LINE('ID Sesión: ' || V_ID_SESION);
-    DBMS_OUTPUT.PUT_LINE('Sesión: ' || V_SESION);
-    DBMS_OUTPUT.PUT_LINE('Fecha de registro: ' || V_FECHA_REGISTRO);
-    DBMS_OUTPUT.PUT_LINE('Fecha válida: ' || V_FECHA_VALIDA);
+    GET_SESIONES(1,'sesion3','R',o_id_sesion,o_sesion,o_fecha_registro,o_fecha_valida);
+    dbms_output.put_line('ID sesion: ' || o_id_sesion);
+    dbms_output.put_line('sesion: ' || o_sesion);
+    dbms_output.put_line('fecha registro: ' || o_fecha_registro);
+    dbms_output.put_line('fecha valida: ' || o_fecha_valida);
 END;
+
 ------------------------------------------------------------------------------------
 --------------------- alternativa dos comentando valores de ejecucion -------------
 SET SERVEROUTPUT ON;
@@ -265,7 +217,7 @@ SET SERVEROUTPUT ON;
 DECLARE
     i_id_usuario NUMBER(15) := 1; 
     i_sesion VARCHAR(255) := ''; 
-    i_accion VARCHAR(255) := 'vigente'; 
+    i_accion VARCHAR(255) := 'S'; 
     o_id_sesion NUMBER; 
     o_sesion VARCHAR(255); 
     o_fecha_registro VARCHAR(255); 
@@ -274,9 +226,9 @@ BEGIN
     SELECT id_sesion, sesion, fecha_registro, fecha_valida
     INTO o_id_sesion, o_sesion, o_fecha_registro, o_fecha_valida
     FROM sesiones
-    WHERE (i_accion = 'vigente' AND id_usuario = i_id_usuario AND estado = 'S')
-    OR (i_accion = 'relacion' AND id_usuario = i_id_usuario AND sesion = i_sesion AND estado = 'S')
-    OR (i_accion = 'pasados' AND id_usuario = i_id_usuario AND estado = 'N') 
+    WHERE (i_accion = 'S' AND id_usuario = i_id_usuario AND estado = 'S')
+    OR (i_accion = 'R' AND id_usuario = i_id_usuario AND sesion = i_sesion AND estado = 'S')
+    OR (i_accion = 'N' AND id_usuario = i_id_usuario AND estado = 'N') 
     ORDER BY id_sesion DESC;
 
     -- Mostrar los valores recuperados en la consola
@@ -317,7 +269,7 @@ END;
        Map<String, Object> inParams = new HashMap<>();
        inParams.put("i_id_usuario", 1);
        inParams.put("i_sesion", "");
-       inParams.put("i_accion", "vigente");
+       inParams.put("i_accion", "S");
        ///inParams.put("i_otro_parametro", 123); // Reemplaza con el valor deseado
         Map<String, Object> outParams = jdbcCall.execute(inParams);
 
@@ -336,3 +288,449 @@ END;
         System.out.println("ID Empresa: " + id_Sesion + ", Nombre: " + sesion);
         return lista;
    }
+#################################################################################################################
+###### registro de seion con sp
+create or replace PROCEDURE insertar_sesion(
+    i_id_sesion IN NUMBER,
+    i_sesion IN VARCHAR2,
+    i_fecha_registro IN VARCHAR2,
+    i_fecha_valida IN VARCHAR2,
+    i_estado IN VARCHAR2,
+    i_id_usuario IN NUMBER,
+    o_resultado OUT NUMBER
+)
+AS
+BEGIN
+    -- Intentar realizar el insert
+    BEGIN
+        INSERT INTO sesiones (ID_SESION, SESION, FECHA_REGISTRO, FECHA_VALIDA, ESTADO, ID_USUARIO)
+        VALUES (i_id_sesion, i_sesion, sysdate, i_fecha_valida, i_estado, i_id_usuario);
+
+        -- Si la inserción es exitosa, establecer el resultado como 1
+        o_resultado := 1;
+    EXCEPTION
+        -- Si ocurre algún error durante la inserción, establecer el resultado como 0
+        WHEN OTHERS THEN
+            o_resultado := 0;
+    END;
+END;
+######probar el sp con sql
+SET SERVEROUTPUT ON;
+DECLARE
+    i_id_sesion NUMBER;
+    i_sesion VARCHAR2(100);
+    i_fecha_registro VARCHAR2(100);
+    i_fecha_valida VARCHAR2(100);
+    i_estado VARCHAR2(100);
+    i_id_usuario NUMBER;
+    o_resultado NUMBER;
+BEGIN
+    insertar_sesion(1,'testing','sysdate','','S',1,o_resultado);
+    
+    dbms_output.put_line('resultado: ' || o_resultado);
+END;
+######ejecutar con java
+@Override
+       public String InsertaSesion(String id) {
+         String respuesta="";
+           SimpleJdbcCall jdbcCall = new SimpleJdbcCall(jdbcTemplate)
+                    .withProcedureName("insertar_sesion")
+                    .declareParameters(
+                            new SqlParameter("i_id_sesion", Types.INTEGER),
+                            new SqlParameter("i_sesion", Types.VARCHAR), // Agrega el nuevo parámetro aquí
+                            new SqlParameter("i_fecha_registro", Types.VARCHAR), // Agrega el nuevo parámetro aquí
+                            new SqlParameter("i_fecha_valida", Types.VARCHAR),
+                            new SqlParameter("i_estado", Types.VARCHAR), // Agrega el nuevo parámetro aquí
+                            new SqlParameter("i_id_usuario", Types.INTEGER), // Agrega el nuevo parámetro aquí
+                            new SqlOutParameter("o_resultado", Types.INTEGER)
+                    );
+
+           Map<String, Object> inParams = new HashMap<>();
+           inParams.put("i_id_sesion", 1);
+           inParams.put("i_sesion", "insertado desde spring con sp");
+           inParams.put("i_fecha_registro", "sysdate");
+           inParams.put("i_fecha_valida", "");
+           inParams.put("i_estado", "S");
+           inParams.put("i_id_usuario", 1);
+           Map<String, Object> outParams = jdbcCall.execute(inParams);
+
+            int o_resultado = (int) outParams.get("o_resultado");
+            
+            System.out.println("estado de insert: " + o_resultado);
+            return respuesta;
+       }
+#################################################################################################################
+###### actualizar de seion con sp
+create or replace PROCEDURE actualizar_sesion(
+    i_id_sesion IN NUMBER,
+    i_accion IN VARCHAR2,
+    o_resultado OUT NUMBER
+)
+AS
+BEGIN
+    BEGIN 
+        IF i_accion = 'confirmar' THEN
+            -- Actualizar solo la FECHA_VALIDA si la acción es 'confirmar'
+            UPDATE sesiones
+            SET FECHA_VALIDA = SYSTIMESTAMP
+            WHERE ID_SESION = i_id_sesion;
+            o_resultado := 1;
+        ELSIF i_accion = 'cerrar' THEN
+            -- Actualizar tanto la FECHA_VALIDA como el ESTADO si la acción es 'cerrar'
+            UPDATE sesiones
+            SET FECHA_VALIDA = SYSTIMESTAMP,
+                ESTADO = 'N'
+            WHERE ID_SESION = i_id_sesion;
+            o_resultado := 1;
+        ELSE
+            -- Si la acción no es ni 'confirmar' ni 'cerrar', mostrar un mensaje de error
+            DBMS_OUTPUT.PUT_LINE('Error: Acción no válida');
+        END IF;
+    EXCEPTION
+        -- Si ocurre algún error durante la inserción, establecer el resultado como 0
+        WHEN OTHERS THEN
+            o_resultado := 0;
+    END;
+END;
+
+###### probar actualizar seion con sp en sql
+SET SERVEROUTPUT ON;
+DECLARE
+    i_id_sesion NUMBER;
+    i_accion VARCHAR2(100);
+    o_resultado NUMBER;
+BEGIN
+    actualizar_sesion(6,'confirmar',o_resultado);
+    dbms_output.put_line('resultado: ' || o_resultado);
+END;
+########ejecucion enjava
+@Override
+       public String actualizaSesion(String id) {
+         String respuesta="";
+           SimpleJdbcCall jdbcCall = new SimpleJdbcCall(jdbcTemplate)
+                    .withProcedureName("actualizar_sesion")
+                    .declareParameters(
+                            new SqlParameter("i_id_sesion", Types.INTEGER),
+                            new SqlParameter("i_accion", Types.VARCHAR),
+                            new SqlOutParameter("o_resultado", Types.INTEGER)
+                    );
+
+           Map<String, Object> inParams = new HashMap<>();
+           inParams.put("i_id_sesion", 5);
+           inParams.put("i_accion", "confirmar");
+           Map<String, Object> outParams = jdbcCall.execute(inParams);
+
+            int o_resultado = (int) outParams.get("o_resultado");
+            
+            System.out.println("estado de insert: " + o_resultado);
+            return respuesta;
+       }
+#################################################################################################################
+############ actualizar sesion con sp
+create or replace PROCEDURE actualizar_sesion(
+    i_id_sesion IN NUMBER,
+    i_accion IN VARCHAR2,
+    o_resultado OUT NUMBER
+)
+AS
+BEGIN
+    BEGIN 
+        IF i_accion = 'confirmar' THEN
+            -- Actualizar solo la FECHA_VALIDA si la acción es 'confirmar'
+            UPDATE sesiones
+            SET FECHA_VALIDA = SYSTIMESTAMP
+            WHERE ID_SESION = i_id_sesion;
+            o_resultado := 1;
+        ELSIF i_accion = 'cerrar' THEN
+            -- Actualizar tanto la FECHA_VALIDA como el ESTADO si la acción es 'cerrar'
+            UPDATE sesiones
+            SET FECHA_VALIDA = SYSTIMESTAMP,
+                ESTADO = 'N'
+            WHERE ID_SESION = i_id_sesion;
+            o_resultado := 1;
+        ELSE
+            -- Si la acción no es ni 'confirmar' ni 'cerrar', mostrar un mensaje de error
+            DBMS_OUTPUT.PUT_LINE('Error: Acción no válida');
+        END IF;
+    EXCEPTION
+        -- Si ocurre algún error durante la inserción, establecer el resultado como 0
+        WHEN OTHERS THEN
+            o_resultado := 0;
+    END;
+END;
+############ porbar el sp con sql
+SET SERVEROUTPUT ON;
+DECLARE
+    i_id_sesion NUMBER;
+    i_accion VARCHAR2(100);
+    o_resultado NUMBER;
+BEGIN
+    actualizar_sesion(6,'confirmar',o_resultado);
+    dbms_output.put_line('resultado: ' || o_resultado);
+END;
+
+
+
+
+
+
+#################################################################################################################
+#################################################################################################################
+################### Accesos ####################################################################################
+#################################################################################################################
+#################################################################################################################
+
+
+
+
+######### crear un acceso con un sp
+create or replace PROCEDURE insertar_acceso(
+    i_id_acceso IN NUMBER,
+    i_id_usuario IN NUMBER,
+    o_resultado OUT NUMBER
+)
+AS
+BEGIN
+    -- Intentar realizar el insert
+    BEGIN
+        INSERT INTO accesos (id_acceso, id_usuario, fecha_acceso)
+        VALUES (i_id_acceso, i_id_usuario, sysdate);
+
+        -- Si la inserción es exitosa, establecer el resultado como 1
+        o_resultado := 1;
+    EXCEPTION
+        -- Si ocurre algún error durante la inserción, establecer el resultado como 0
+        WHEN OTHERS THEN
+            o_resultado := 0;
+    END;
+END;
+
+############### probar en sql 
+SET SERVEROUTPUT ON;
+DECLARE
+    i_id_acceso NUMBER;
+    i_id_usuario NUMBER;
+    o_resultado NUMBER;
+BEGIN
+    insertar_acceso(1,1,o_resultado);
+    
+    dbms_output.put_line('resultado: ' || o_resultado);
+END;
+########### ejecutar en java
+@Override
+public String InsertaAcceso(String id) {
+ String respuesta="";
+   SimpleJdbcCall jdbcCall = new SimpleJdbcCall(jdbcTemplate)
+            .withProcedureName("insertar_acceso")
+            .declareParameters(
+                    new SqlParameter("i_id_acceso", Types.INTEGER),
+                    new SqlParameter("i_id_usuario", Types.INTEGER), // Agrega el nuevo parámetro aquí
+                    new SqlOutParameter("o_resultado", Types.INTEGER)
+            );
+
+   Map<String, Object> inParams = new HashMap<>();
+   inParams.put("i_id_acceso", 1);
+   inParams.put("i_id_usuario", 1);
+   Map<String, Object> outParams = jdbcCall.execute(inParams);
+
+    int o_resultado = (int) outParams.get("o_resultado");
+    
+    System.out.println("estado de insert: " + o_resultado);
+    return respuesta;
+}
+
+
+
+
+
+#################################################################################################################
+#################################################################################################################
+################### usuarios ####################################################################################
+#################################################################################################################
+#################################################################################################################
+
+###### creacion de sp que obtiene usuario por id, email, o email y password
+create or replace PROCEDURE get_usuario(
+    i_id_usuario IN NUMBER DEFAULT NULL,
+    i_email IN VARCHAR2 DEFAULT NULL,
+    i_password IN VARCHAR2 DEFAULT NULL,
+    o_id_usuario OUT NUMBER,
+    o_nombre OUT VARCHAR2,
+    o_apellido_paterno OUT VARCHAR2,
+    o_apellido_materno OUT VARCHAR2,
+    o_email OUT VARCHAR2,
+    o_password OUT VARCHAR2,
+    o_activo OUT CHAR,
+    o_crear_usuarios OUT VARCHAR2,
+    o_fecha_registro OUT TIMESTAMP,
+    o_fecha_actualizacion OUT TIMESTAMP,
+    o_perfil OUT CHAR,
+    o_id_persona OUT NUMBER,
+    o_telefono OUT NUMBER
+) IS
+BEGIN
+    SELECT 
+        id_usuario,
+        nombre,
+        apellido_paterno,
+        apellido_materno,
+        email,
+        password,
+        activo,
+        crear_usuarios,
+        fecha_registro,
+        fecha_actualizacion,
+        perfil,
+        id_persona,
+        telefono
+    INTO 
+        o_id_usuario,
+        o_nombre,
+        o_apellido_paterno,
+        o_apellido_materno,
+        o_email,
+        o_password,
+        o_activo,
+        o_crear_usuarios,
+        o_fecha_registro,
+        o_fecha_actualizacion,
+        o_perfil,
+        o_id_persona,
+        o_telefono
+    FROM usuarios
+    WHERE (id_usuario = i_id_usuario and i_id_usuario IS not NULL and i_email IS NULL and i_password IS NULL and activo='S')
+    OR (email = i_email and i_email IS not NULL and i_id_usuario IS NULL and i_password IS NULL and activo='S')
+    OR (password = i_password  and i_password IS not NULL and email = i_email and i_email IS not NULL and i_id_usuario IS NULL and activo='S') 
+    ;
+EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+        o_id_usuario := NULL;
+END get_usuario;
+
+
+#################################################################################################################
+############# para probar en sql despues de crear procedure
+SET SERVEROUTPUT ON;
+DECLARE
+    o_id_usuario NUMBER;
+    o_nombre VARCHAR2(100);
+    o_apellido_paterno VARCHAR2(100);
+    o_apellido_materno VARCHAR2(100);
+    o_email VARCHAR2(100);
+    o_password VARCHAR2(100);
+    o_activo CHAR;
+    o_crear_usuarios VARCHAR2(100);
+    o_fecha_registro TIMESTAMP;
+    o_fecha_actualizacion TIMESTAMP;
+    o_perfil CHAR;
+    o_id_persona NUMBER;
+    o_telefono NUMBER;
+BEGIN
+    ------se deben pasar los parametros de entrada invocando el procedure, y despues los nombres de las salidas ya delcaradas antes del BEGIN
+    get_usuario(2,'','',o_id_usuario,o_nombre,o_apellido_paterno,o_apellido_materno,o_email,o_password,o_activo,o_crear_usuarios,o_fecha_registro,o_fecha_actualizacion,o_perfil,o_id_persona,o_telefono);
+    dbms_output.put_line('ID usuario: ' || o_id_usuario || ', Nombre: ' || o_nombre || ', email: ' || o_email || ', password: ' || o_password);
+    dbms_output.put_line('perfil: ' || o_perfil);
+    dbms_output.put_line('crear usuarios: ' || o_crear_usuarios);
+    dbms_output.put_line('telefono: ' || o_telefono);
+END;
+#################################################################################################################
+###########ejecucion en java
+@Override
+       public List<usuarios> getUsuario(String id) {
+            List<usuarios> lista = new ArrayList<usuarios>();
+            SimpleJdbcCall jdbcCall = new SimpleJdbcCall(jdbcTemplate)
+                    .withProcedureName("GET_USUARIO")
+                    .declareParameters(
+                            new SqlParameter("i_id_usuario", Types.INTEGER),
+                            new SqlParameter("i_email", Types.VARCHAR), // Agrega el nuevo parámetro aquí
+                            new SqlParameter("i_password", Types.VARCHAR), // Agrega el nuevo parámetro aquí
+                            new SqlOutParameter("o_id_usuario", Types.INTEGER),
+                            new SqlOutParameter("o_nombre", Types.VARCHAR),
+                            new SqlOutParameter("o_apellido_paterno", Types.VARCHAR),
+                            new SqlOutParameter("o_apellido_materno", Types.VARCHAR),
+                            new SqlOutParameter("o_email", Types.VARCHAR),
+                            new SqlOutParameter("o_password", Types.VARCHAR),
+                            new SqlOutParameter("o_activo", Types.VARCHAR),
+                            new SqlOutParameter("o_crear_usuarios", Types.VARCHAR),
+                            new SqlOutParameter("o_fecha_registro", Types.VARCHAR),
+                            new SqlOutParameter("o_fecha_actualizacion", Types.VARCHAR),
+                            new SqlOutParameter("o_perfil", Types.VARCHAR),
+                            new SqlOutParameter("o_id_persona", Types.INTEGER),
+                            new SqlOutParameter("o_telefono", Types.VARCHAR)
+                    );
+
+           Map<String, Object> inParams = new HashMap<>();
+           inParams.put("i_id_usuario", 1);
+           inParams.put("i_email", "");
+           inParams.put("i_password", "");
+           ///inParams.put("i_otro_parametro", 123); // Reemplaza con el valor deseado
+            Map<String, Object> outParams = jdbcCall.execute(inParams);
+
+            int id_usuario = (int) outParams.get("o_id_usuario");
+            String nombre = (String) outParams.get("o_nombre");
+            String ap = (String) outParams.get("o_apellido_paterno");
+            String am = (String) outParams.get("o_apellido_materno");
+            String email = (String) outParams.get("o_email");
+            String password = (String) outParams.get("o_password");
+            
+            String o_activo = (String) outParams.get("o_activo");
+            String o_crear_usuarios = (String) outParams.get("o_crear_usuarios");
+            String o_fecha_registro = (String) outParams.get("o_fecha_registro");
+            String o_fecha_actualizacion = (String) outParams.get("o_fecha_actualizacion");
+            String o_perfil = (String) outParams.get("o_perfil");
+            int o_id_persona = (int) outParams.get("o_id_persona");
+            String o_telefono = (String) outParams.get("o_telefono");
+            
+            usuarios em = new usuarios();
+            em.setId_usuario(""+id_usuario);
+            em.setNombre(nombre);
+            em.setApellido_paterno(ap);
+            em.setApellido_materno(am);
+            em.setEmail(email);
+            em.setPassword(password);
+            em.setActivo(""+o_activo.trim());
+            em.setCrear_usuarios(""+o_crear_usuarios);
+            em.setFecha_registro(o_fecha_registro);
+            em.setFecha_actualizacion(o_fecha_actualizacion);
+            em.setPerfil(""+o_perfil.trim());
+            em.setId_persona(""+o_id_persona);
+            em.setTelefono(""+o_telefono);
+            lista.add(em);
+            System.out.println("ID usuario: " + id_usuario + ", crear: "+o_crear_usuarios );
+            return lista;
+       }
+
+
+
+#################################################################################################################
+#################################################################################################################
+################### autenticacion de permisos #################################################################
+#################################################################################################################
+#################################################################################################################
+###sp dde permisos
+create or replace PROCEDURE get_autorization(
+    i_id_usuario IN NUMBER,
+    o_resultado OUT NUMBER
+) IS
+BEGIN
+    SELECT 
+        id_usuario
+    INTO 
+        o_resultado
+    FROM usuarios
+    WHERE (id_usuario = i_id_usuario) and ((perfil='2' and crear_usuarios='S') or perfil='3') and activo='S'
+    ;
+    o_resultado := 1;
+EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+        o_resultado := 0;
+END get_autorization;
+
+### ejecuta en sql
+SET SERVEROUTPUT ON;
+DECLARE
+    o_resultado NUMBER;
+BEGIN
+    get_autorization(2,o_resultado);
+    dbms_output.put_line('autorizado: ' || o_resultado);
+END;
