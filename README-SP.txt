@@ -734,3 +734,26 @@ BEGIN
     get_autorization(2,o_resultado);
     dbms_output.put_line('autorizado: ' || o_resultado);
 END;
+
+
+#################################################################################################################
+#################################################################################################################
+################### uso de webclient de springboot ##############################################################
+#################################################################################################################
+#################################################################################################################
+WebClient webClient = WebClient.create();
+String url = "https://petstore.swagger.io/v2/pet/findByStatus?status=available";
+String responseJson = webClient.get().uri(url).exchange().block().bodyToMono(String.class).block();
+
+
+// Realiza la solicitud GET y obtén la respuesta como texto plano
+String responseText = webClient.get()
+        .uri(url)
+        .retrieve()
+        .bodyToMono(String.class)
+        .block();
+
+// Procesa la respuesta según tus necesidades
+System.out.println("Respuesta del microservicio:");
+System.out.println(responseText);
+
