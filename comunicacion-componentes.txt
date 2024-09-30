@@ -1,0 +1,150 @@
+//////// service ////////////////////////////////////////////////
+
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs/internal/Observable';
+import { ReplaySubject } from 'rxjs/internal/ReplaySubject';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class ComunicasionserviceService {
+  private dataSubject: ReplaySubject<string> = new ReplaySubject<string>(1);
+  setData(data: string): void {
+    this.dataSubject.next(data);
+  }
+
+  getData$(): Observable<string> {
+    return this.dataSubject.asObservable();
+  }
+  constructor() {
+    
+   }
+}
+
+//////// componente inicio ////////////////////////////////////////////////
+
+import { Component } from '@angular/core';
+import { TablaComponent } from '../tabla/tabla.component';
+import { AdministradorComponent } from '../administrador/administrador.component';
+import { FormsModule,ReactiveFormsModule } from '@angular/forms';
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ComunicasionserviceService } from '../../services/comunicasionservice.service';
+import { Subject } from 'rxjs/internal/Subject';
+import { takeUntil } from 'rxjs/internal/operators/takeUntil';
+
+@Component({
+  standalone:true,
+  selector: 'app-inicio',
+  templateUrl: './inicio.component.html',
+  styleUrls: ['./inicio.component.css'],
+  imports:[TablaComponent,AdministradorComponent,FormsModule,CommonModule]
+})
+export class InicioComponent {
+  title = 'nominaV16';
+  banStart=false;
+  banTable=false;
+  banAdmin=false;
+  receivedData?: string;
+  private unsubscribe = new Subject<void>();
+  constructor(
+    private comunicasionserviceService: ComunicasionserviceService
+  ){
+
+  }
+  
+  ngOnInit(){
+    this.comunicasionserviceService.getData$().pipe(takeUntil(this.unsubscribe)).subscribe(data => {
+      this.receivedData = data;
+      if(this.receivedData=="optionAdmin"){
+        console.log("modo adminitrador desde el inicio :::::::: ");
+      }
+    });
+  }
+  goStart(){
+    this.banStart=true;
+    this.banTable=false;
+    this.banAdmin=false;
+
+    const data = 'optionStart';
+    this.comunicasionserviceService.setData(data);
+  }
+  goTable(){
+    this.banStart=false;
+    this.banTable=true;
+    this.banAdmin=false;
+
+    const data = 'optionTable';
+    this.comunicasionserviceService.setData(data);
+   }
+   goAdmin(){
+    this.banStart=false;
+    this.banTable=false;
+    this.banAdmin=true;
+
+    const data = 'optionAdmin';
+    this.comunicasionserviceService.setData(data);
+   }
+
+}
+
+//////// componente tabla ////////////////////////////////////////////////
+
+import { Component } from '@angular/core';
+import { FormsModule,ReactiveFormsModule } from '@angular/forms';
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ComunicasionserviceService } from '../../services/comunicasionservice.service';
+import { Subject } from 'rxjs/internal/Subject';
+import { takeUntil } from 'rxjs/internal/operators/takeUntil';
+@Component({
+  standalone: true,
+  selector: 'app-tabla',
+  templateUrl: './tabla.component.html',
+  styleUrls: ['./tabla.component.css'],
+  imports:[FormsModule,CommonModule]
+})
+export class TablaComponent {
+  banStart=true;
+  banTable=false;
+  banAdmin=false;
+  constructor(
+    private comunicasionserviceService: ComunicasionserviceService
+  ){
+  }
+  
+
+  receivedData?: string;
+  private unsubscribe = new Subject<void>();
+
+  ngOnInit(){
+    this.comunicasionserviceService.getData$().pipe(takeUntil(this.unsubscribe)).subscribe(data => {
+      this.receivedData = data;
+      if(this.receivedData=="optionStart"){
+        this.spaceStart();
+        console.log("modo inicio :::::::: ");
+      }else if(this.receivedData=="optionTable"){
+        this.spaceNormal();
+        console.log("modo normal :::::::: ");
+      }else if(this.receivedData=="optionAdmin"){
+        this.spaceAdmin();
+        console.log("modo adminitrador :::::::: ");
+      }
+    });
+  }
+  spaceAdmin(){
+    this.banStart=false;
+    this.banTable=false;
+    this.banAdmin=true;
+  }
+  spaceNormal(){
+    this.banStart=false;
+    this.banTable=true;
+    this.banAdmin=false;
+  }
+  spaceStart(){
+    this.banStart=true;
+    this.banTable=false;
+    this.banAdmin=false;
+  }
+}
