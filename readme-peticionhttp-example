@@ -1,0 +1,63 @@
+package com.chaps.libreriaChaps;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
+
+import javax.annotation.PostConstruct;
+public class TestService {
+		public TestService() {
+		}
+	    public String postService() {
+	    	String salida="";
+	        String baseUrl = "http://192.168.1.9:9998/service/testPostJava?nombre=jesus&edad=treinta";
+	        try {
+	        URL url = new URL(baseUrl);
+	        HttpURLConnection con = (HttpURLConnection) url.openConnection();
+	        con.setRequestMethod("POST");
+	        con.setDoOutput(false);
+//	        con.setRequestProperty("User-Agent", "Mozilla/5.0");
+//	        con.setRequestProperty("Accept", "application/json");
+//	        con.setRequestProperty("Content-Length", "0");
+
+//	        int status = con.getResponseCode();
+//	        BufferedReader in = new BufferedReader(
+//	                new InputStreamReader(
+//	                    status >= 400 ? con.getErrorStream() : con.getInputStream()
+//	                )
+//	        );
+//	        String inputLine;
+//	        StringBuilder respuesta = new StringBuilder();
+//	        while ((inputLine = in.readLine()) != null) {
+//	            respuesta.append(inputLine);
+//	        }
+//	        in.close();
+//	        con.disconnect();
+
+	        
+	        int status = con.getResponseCode();
+	        BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+	        String inputLine;
+	        StringBuilder respuesta = new StringBuilder();
+
+	        while ((inputLine = in.readLine()) != null) {
+	            respuesta.append(inputLine);
+	        }
+	        
+	        System.out.println("Respuesta del servidor: " + respuesta.toString());
+	        if (status==200) return salida="exito en peticion con java http nativo";
+	        else return salida="fallo peticion con java http nativo";
+	        }catch(Exception exx) {
+	        	exx.printStackTrace();
+	        }
+	        return salida;
+	    }
+	    public static void main (String args[]) {
+	    	TestService ser=new TestService();
+	    	String rerpuesta=ser.postService();
+	    }
+	
+}
+
+
