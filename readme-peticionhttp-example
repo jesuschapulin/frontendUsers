@@ -57,6 +57,55 @@ public class TestService {
 	    	TestService ser=new TestService();
 	    	String rerpuesta=ser.postService();
 	    }
+
+
+
+############################################################################################################################
+############################################################################################################################
+############################################################################################################################
+################################################orquestador de permisos ####################################################
+Map<String, List<PermisoRequerido>> mapaPermisos  = Map.of(
+		    "1", List.of(new PermisoRequerido("POST", "http://localhost/9093/service/productos")),
+		    "2", List.of(new PermisoRequerido("POST", "http://localhost/9093/service/productos/delete")),
+		    "3", List.of(new PermisoRequerido("PUT", "http://localhost/9093/service/productos")),
+		    "4", List.of(new PermisoRequerido("POST", "http://localhost/9093/service/categorias")),
+		    "5", List.of(new PermisoRequerido("POST", "http://localhost/9093/service/categorias/delete")),
+		    "6", List.of(new PermisoRequerido("POST", "http://localhost/9093/service/permisos/empleados")),
+		    "7", List.of(new PermisoRequerido("GET", "http://localhost/9093/service/permisos/empleados")),
+		    "8", List.of(new PermisoRequerido("GET", "http://localhost/9093/service/permisos")),
+		    "9", List.of(new PermisoRequerido("POST", "http://localhost/9093/service/permisos/delete"))
+		);
+	public class PermisoRequerido {
+	    public String metodo;
+	    public String pathRegex;
+
+	    public PermisoRequerido(String metodo, String pathRegex) {
+	        this.metodo = metodo;
+	        this.pathRegex = pathRegex;
+	    }
+	    public String getMetodo() {
+	        return metodo;
+	    }
+
+	    public String getPathRegex() {
+	        return pathRegex;
+	    }
+	}
+    private boolean autoriza(List<String> permisos, String metodo, String path) {
+    	Integer[] prods = new Integer[] {3};
+        for (String permiso : permisos) {
+            List<PermisoRequerido> reglas = mapaPermisos.get(permiso);
+            if (reglas != null) {
+                for (PermisoRequerido r : reglas) {
+                    if (r.metodo.equalsIgnoreCase(metodo) &&
+                        path.matches(r.pathRegex) && Arrays.asList(prods).contains(1)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
 	
 }
 
